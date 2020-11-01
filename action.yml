@@ -30,9 +30,9 @@ runs:
     - shell: bash
       id: init
       run: |
-        echo "::warning::This action is in beta stage, \
+        echo -e "::warning::This action is in beta stage, \
         if you encounter issues please open an issue at https://github.com/hacs/integration/issues, \
-        for documentation about the stable HACS action see https://hacs.xyz/docs/publish/action"
+        for documentation about the stable HACS action see https://hacs.xyz/docs/publish/action\n"
 
         mkdir -p "${{ github.action_path }}/data"
 
@@ -139,6 +139,7 @@ runs:
             git clone --quiet --depth 1 https://github.com/home-assistant/brands.git "${{ github.action_path }}/brands" > /dev/null
             exsist=$(find "${{ github.action_path }}/brands" -type d -name "$domain")
             if [ ! -z "${exsist}" ]; then
+              echo "${exsist}"
               echo "✅ $domain is added to https://github.com/home-assistant/brands, NICE!" >> "${{ github.action_path }}/result"
             else
               echo "❌ $domain is not added to https://github.com/home-assistant/brands (more-info: https://hacs.xyz/docs/publish/include#check-brands)" >> "${{ github.action_path }}/result"
@@ -173,6 +174,7 @@ runs:
         data=$(jq .has_issues -r "${{ github.action_path }}/data/info") > /dev/null
         if [[ ! "${{ inputs.ignore }}" =~ issues ]]; then
           echo "::group::issues"
+          echo "https://github.com/{{ steps.init.outputs.repository }}/issues"
           echo "https://hacs.xyz/docs/publish/include#check-repository"
           if [ "${data}" == "true" ]; then
             echo "✅ The repository has issues enabled" >> "${{ github.action_path }}/result"
@@ -290,6 +292,9 @@ runs:
             echo "❌ Information file not found (more-info: https://hacs.xyz/docs/publish/include#check-info)" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
+          if [ -f "${{ steps.information.outputs.path }}" ];then
+            cat "${{ steps.information.outputs.path }}"
+          fi
           echo "::endgroup::"
         else
           echo "⚪ Skipped check: information" >> "${{ github.action_path }}/result"
@@ -356,10 +361,12 @@ runs:
               echo "https://hacs.xyz/docs/publish/include#check-wheels"
               domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
               set +e
-              curl -sSLf "https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/components/$domain.json" > /dev/null
+              wheelsurl="https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/components/$domain.json"
+              curl -sSLf "$wheelsurl" > /dev/null
               wheels=$?
               set -e
               if [ "${wheels}" == 0 ]; then
+                  echo "${wheelsurl}"
                   echo "✅ Python wheels" >> "${{ github.action_path }}/result"
               else
                 echo "❌ Python wheels (more-info: https://hacs.xyz/docs/publish/include#check-wheels" >> "${{ github.action_path }}/result"
