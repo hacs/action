@@ -83,6 +83,7 @@ runs:
             exit 1
           else
             echo "::set-output name=path::$manifest"
+            cat "$manifest" | jq .
             for key in "issue_tracker domain documentation codeowners"; do
               if [ -z "$(jq --arg entry "$key" '.[$entry]' -r "$manifest")" ]; then
                 echo "❌ manifest.json file missing key $key $moreinfo";
@@ -100,6 +101,7 @@ runs:
           echo "::group::description"
           echo "https://hacs.xyz/docs/publish/include#check-repository"
           if [ ! -z "${data}" ]; then
+            echo "${data}"
             echo "✅ The repository has a description" >> "${{ github.action_path }}/result"
           else
             echo "❌ The repository is missing a description (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
@@ -116,7 +118,7 @@ runs:
         if [[ ! "${{ inputs.ignore }}" =~ archived ]]; then
           echo "::group::archived"
           echo "https://hacs.xyz/docs/publish/include#check-archived"
-          if [ ! -z "${data}" ]; then
+          if [ "${data}" == "false" ]; then
             echo "✅ The repository is not archived" >> "${{ github.action_path }}/result"
           else
             echo "❌ The repository is archived (more-info: https://hacs.xyz/docs/publish/include#check-archived)" >> "${{ github.action_path }}/result"
@@ -155,6 +157,7 @@ runs:
           echo "::group::topics"
           echo "https://hacs.xyz/docs/publish/include#check-repository"
           if [ ! -z "${data}" ]; then
+            echo "${data}"
             echo "✅ The repository has topics" >> "${{ github.action_path }}/result"
           else
             echo "❌ The repository is missing topics (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
@@ -208,6 +211,7 @@ runs:
             echo "❌ hacs.json file not found in the root of the repository $moreinfo" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           else
+            cat "${{ steps.init.outputs.path }}/hacs.json" | jq .
             echo "::set-output name=path::"${{ steps.init.outputs.path }}/hacs.json""
             name=$(jq .name "${{ steps.init.outputs.path }}/hacs.json")
             if [ ! -z "${name}" ]; then
@@ -303,6 +307,7 @@ runs:
                 https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/scripts/validate_requirements.py
               cd "${{ github.action_path }}/helpers/requirements"
               cat "${{ steps.manifest.outputs.path }}" | jq -r .requirements > ./requirements.json
+              cat ./requirements.json | jq .
               docker build . -t homeassistant/home-assistant:beta
               set +e
               docker run homeassistant/home-assistant:beta
@@ -329,6 +334,7 @@ runs:
             echo "https://hacs.xyz/docs/publish/include#check-images"
             images=$(python3 ${{ github.action_path }}/helpers/findimages.py "${{ steps.information.outputs.path }}")
             if [ ! -z "${images}" ]; then
+              echo "${images}"
               echo "✅ Information file has images" >> "${{ github.action_path }}/result"
             else
               echo "❌ There should be images to show the user what they get." >> "${{ github.action_path }}/result"
