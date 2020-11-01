@@ -174,7 +174,7 @@ runs:
         data=$(jq .has_issues -r "${{ github.action_path }}/data/info") > /dev/null
         if [[ ! "${{ inputs.ignore }}" =~ issues ]]; then
           echo "::group::issues"
-          echo "https://github.com/{{ steps.init.outputs.repository }}/issues"
+          echo "https://github.com/${{ steps.init.outputs.repository }}/issues"
           echo "https://hacs.xyz/docs/publish/include#check-repository"
           if [ "${data}" == "true" ]; then
             echo "✅ The repository has issues enabled" >> "${{ github.action_path }}/result"
@@ -243,57 +243,58 @@ runs:
           fi
           if [ -f "${{ steps.init.outputs.path }}/README.md" ] && [ "$render_readme" == "true" ]; then
             echo "✅ README.md exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/README.md"
+            filepath="${{ steps.init.outputs.path }}/README.md"
 
           elif [ -f "${{ steps.init.outputs.path }}/readme.md" ] && [ "$render_readme" == "true" ]; then
             echo "✅ readme.md exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/readme.md"
+            filepath="${{ steps.init.outputs.path }}/readme.md"
 
           elif [ -f "${{ steps.init.outputs.path }}/README.MD" ] && [ "$render_readme" == "true" ]; then
             echo "✅ README.MD exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/README.MD"
+            filepath="${{ steps.init.outputs.path }}/README.MD"
 
           elif [ -f "${{ steps.init.outputs.path }}/readme.MD" ] && [ "$render_readme" == "true" ]; then
             echo "✅ readme.MD exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/readme.MD"
+            filepath="${{ steps.init.outputs.path }}/readme.MD"
 
           elif [ -f "${{ steps.init.outputs.path }}/readme" ] && [ "$render_readme" == "true" ]; then
             echo "✅ readme exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/readme"
+            filepath="${{ steps.init.outputs.path }}/readme"
 
           elif [ -f "${{ steps.init.outputs.path }}/README" ] && [ "$render_readme" == "true" ]; then
             echo "✅ README exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/README"
+            filepath="${{ steps.init.outputs.path }}/README"
 
           elif [ -f "${{ steps.init.outputs.path }}/INFO.md" ]; then
             echo "✅ INFO.md exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/INFO.md"
+            filepath="${{ steps.init.outputs.path }}/INFO.md"
 
           elif [ -f "${{ steps.init.outputs.path }}/info.md" ]; then
             echo "✅ info.md exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/info.md"
+            filepath="${{ steps.init.outputs.path }}/info.md"
 
           elif [ -f "${{ steps.init.outputs.path }}/INFO.MD" ]; then
             echo "✅ INFO.MD exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/INFO.MD"
+            filepath="${{ steps.init.outputs.path }}/INFO.MD"
 
           elif [ -f "${{ steps.init.outputs.path }}/info.MD" ]; then
             echo "✅ info.MD exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/info.MD"
+            filepath="${{ steps.init.outputs.path }}/info.MD"
 
           elif [ -f "${{ steps.init.outputs.path }}/INFO" ]; then
             echo "✅ INFO exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/INFO"
+            filepath="${{ steps.init.outputs.path }}/INFO"
 
           elif [ -f "${{ steps.init.outputs.path }}/info" ]; then
             echo "✅ info exsists" >> "${{ github.action_path }}/result"
-            echo "::set-output name=path::${{ steps.init.outputs.path }}/info"
+            filepath="${{ steps.init.outputs.path }}/info"
           else
             echo "❌ Information file not found (more-info: https://hacs.xyz/docs/publish/include#check-info)" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
-          if [ -f "${{ steps.information.outputs.path }}" ];then
-            cat "${{ steps.information.outputs.path }}"
+          echo "::set-output name=path::$filepath"
+          if [ -f "$filepath" ];then
+            cat "$filepath"
           fi
           echo "::endgroup::"
         else

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\n🎉 HACS repository validator action summary 🎉\n"
+echo -e "\n🎉 HACS repository validator action summary 🎉"
 
 grep -v '^ *#' < "$1/result" | while IFS= read -r line
 do
