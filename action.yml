@@ -35,7 +35,7 @@ runs:
         for documentation about the stable HACS action see https://hacs.xyz/docs/publish/action"
 
         mkdir -p "${{ github.action_path }}/data"
-        echo -e "Running checks...\n\n"
+        echo -e "Running checks...\n"
 
         git clone --quiet --depth 1 https://github.com/hacs/integration.git "${{ github.action_path }}/hacs" > /dev/null
 
@@ -76,6 +76,7 @@ runs:
       run: |
         moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-manifest)"
         if [ "${{ inputs.category }}" == "integration" ]; then
+          echo "::group::manifest"
           manifest=$(find "${{ steps.init.outputs.path }}" -name manifest.json)
           if [ ! -f "$manifest" ]; then
             echo "❌ manifest.json file not found $moreinfo";
@@ -89,18 +90,21 @@ runs:
               fi
             done
           fi
+          echo "::endgroup::"
         fi
 
     - shell: bash
       run: |
         data=$(jq .description -r "${{ github.action_path }}/data/info") > /dev/null
         if [[ ! "${{ inputs.ignore }}" =~ description ]]; then
+          echo "::group::description"
           if [ ! -z "${data}" ]; then
             echo "✅ The repository has a description" >> "${{ github.action_path }}/result"
           else
             echo "❌ The repository is missing a description (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
+          echo "::endgroup::"
         else
           echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
         fi
@@ -109,12 +113,14 @@ runs:
       run: |
         data=$(jq .archived -r "${{ github.action_path }}/data/info") > /dev/null
         if [[ ! "${{ inputs.ignore }}" =~ archived ]]; then
+          echo "::group::archived"
           if [ ! -z "${data}" ]; then
             echo "✅ The repository is not archived" >> "${{ github.action_path }}/result"
           else
             echo "❌ The repository is archived (more-info: https://hacs.xyz/docs/publish/include#check-archived)" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
+          echo "::endgroup::"
         else
           echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
         fi
@@ -123,6 +129,7 @@ runs:
       run: |
         if [ "${{ inputs.category }}" == "integration" ]; then
           if [[ ! "${{ inputs.ignore }}" =~ brands ]]; then
+            echo "::group::brands"
             domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
             git clone --quiet --depth 1 https://github.com/home-assistant/brands.git "${{ github.action_path }}/brands" > /dev/null
             exsist=$(find "${{ github.action_path }}/brands" -type d -name "$domain")
@@ -132,6 +139,7 @@ runs:
               echo "❌ $domain is not added to https://github.com/home-assistant/brands (more-info: https://hacs.xyz/docs/publish/include#check-brands)" >> "${{ github.action_path }}/result"
               touch "${{ github.action_path }}/error"
             fi
+            echo "::endgroup::"
           else
             echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
           fi
@@ -141,12 +149,14 @@ runs:
       run: |
         data=$(jq .names[] -r "${{ github.action_path }}/data/topics") > /dev/null
         if [[ ! "${{ inputs.ignore }}" =~ topics ]]; then
+          echo "::group::topics"
           if [ ! -z "${data}" ]; then
             echo "✅ The repository has topics" >> "${{ github.action_path }}/result"
           else
             echo "❌ The repository is missing topics (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
+          echo "::endgroup::"
         else
           echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
         fi
@@ -155,12 +165,14 @@ runs:
       run: |
         data=$(jq .has_issues -r "${{ github.action_path }}/data/info") > /dev/null
         if [[ ! "${{ inputs.ignore }}" =~ issues ]]; then
+          echo "::group::issues"
           if [ "${data}" == "true" ]; then
             echo "✅ The repository has issues enabled" >> "${{ github.action_path }}/result"
           else
             echo "❌ The repository has not issues enabled (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
+          echo "::endgroup::"
         else
           echo "⚪ Skipped check: issues" >> "${{ github.action_path }}/result"
         fi
@@ -170,11 +182,13 @@ runs:
         moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-fork)"
         data=$(jq .fork -r "${{ github.action_path }}/data/info") > /dev/null
         if [[ "${{ github.repository }}" == "hacs/default" ]]; then
+          echo "::group::fork"
           if [ "${data}" == "false" ]; then
             echo "✅ The repository is not a fork" >> "${{ github.action_path }}/result"
           else
             echo "⚪ The repository is a fork (more-info: https://hacs.xyz/docs/publish/include#check-fork)" >> "${{ github.action_path }}/result"
           fi
+          echo "::endgroup::"
         fi
 
     - shell: bash
@@ -182,6 +196,7 @@ runs:
       run: |
         moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-hacs-manifest)"
         if [[ ! "${{ inputs.ignore }}" =~ hacsjson ]]; then
+          echo "::group::hacsjson"
           if [ ! -f "${{ steps.init.outputs.path }}/hacs.json" ]; then
             echo "❌ hacs.json file not found in the root of the repository $moreinfo" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
@@ -195,6 +210,7 @@ runs:
               touch "${{ github.action_path }}/error"
             fi
           fi
+          echo "::endgroup::"
         else
           echo "⚪ Skipped check: hacsjson" >> "${{ github.action_path }}/result"
         fi
@@ -207,6 +223,7 @@ runs:
       id: information
       run: |
         if [[ ! "${{ inputs.ignore }}" =~ information ]]; then
+          echo "::group::information"
           if [ -f "${{ steps.init.outputs.path }}/hacs.json" ]; then
             render_readme=$(jq .render_readme -r "${{ steps.init.outputs.path }}/hacs.json")
           fi
@@ -261,6 +278,7 @@ runs:
             echo "❌ Information file not found (more-info: https://hacs.xyz/docs/publish/include#check-info)" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
+          echo "::endgroup::"
         else
           echo "⚪ Skipped check: information" >> "${{ github.action_path }}/result"
         fi
@@ -271,6 +289,7 @@ runs:
           if [[ ! "${{ inputs.ignore }}" =~ requirements ]]; then
             requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r .requirements) > /dev/null
             if [ ! -z "$requirements" ]; then
+              echo "::group::requirements"
               mkdir -p "${{ steps.init.outputs.path }}/requirements"
               wget -q -O "${{ github.action_path }}/helpers/requirements/validate_requirements.py" \
                 https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/scripts/validate_requirements.py
@@ -287,6 +306,7 @@ runs:
                 echo "❌ Requirements validation" >> "${{ github.action_path }}/result"
                 touch "${{ github.action_path }}/error"
               fi
+              echo "::endgroup::"
             fi
           else
             echo "⚪ Skipped check: requirements" >> "${{ github.action_path }}/result"
@@ -297,14 +317,15 @@ runs:
       run: |
         if [ "plugin" == ${{ inputs.category }} ] || [ "theme" == ${{ inputs.category }} ]; then
           if [[ ! "${{ inputs.ignore }}" =~ images ]]; then
+            echo "::group::images"
             images=$(python3 ${{ github.action_path }}/helpers/findimages.py "${{ steps.information.outputs.path }}")
-            echo ${markdown}
             if [ ! -z "${images}" ]; then
               echo "✅ Information file has images" >> "${{ github.action_path }}/result"
             else
               echo "❌ There should be images to show the user what they get." >> "${{ github.action_path }}/result"
               touch "${{ github.action_path }}/error"
             fi
+            echo "::endgroup::"
           else
             echo "⚪ Skipped check: images" >> "${{ github.action_path }}/result"
           fi
@@ -316,6 +337,7 @@ runs:
           if [[ ! "${{ inputs.ignore }}" =~ wheels ]]; then
             requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r .requirements) > /dev/null
             if [ ! -z "$requirements" ]; then
+              echo "::group::wheels"
               domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
               set +e
               curl -sSLf "https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/components/$domain.json" > /dev/null
@@ -327,6 +349,7 @@ runs:
                 echo "❌ Python wheels (more-info: https://hacs.xyz/docs/publish/include#check-wheels" >> "${{ github.action_path }}/result"
                 touch "${{ github.action_path }}/error"
               fi
+              echo "::endgroup::"
             fi
           else
             echo "⚪ Skipped check: wheels" >> "${{ github.action_path }}/result"
@@ -337,6 +360,7 @@ runs:
       run: |
         if [ "${{ inputs.category }}" == "integration" ]; then
           if [[ ! "${{ inputs.ignore }}" =~ hassfest ]]; then
+            echo "::group::hassfest"
             domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
             integration_path=$(dirname ${{ steps.manifest.outputs.path }})
             set +e
@@ -364,6 +388,7 @@ runs:
               echo "❌ Hassfest (more-info: https://hacs.xyz/docs/publish/include#check-hassfest)" >> "${{ github.action_path }}/result"
               touch "${{ github.action_path }}/error"
             fi
+            echo "::endgroup::"
           else
             echo "⚪ Skipped check: hassfest" >> "${{ github.action_path }}/result"
           fi
@@ -372,6 +397,7 @@ runs:
     - shell: bash
       run: |
         if [[ ! "${{ inputs.ignore }}" =~ hacs ]]; then
+          echo "::group::hacs"
           cd "${{ github.action_path }}/hacs/action"
           cp "${{ github.action_path }}/helpers/action.py" "./action.py"
           docker build . -t hacs/action
@@ -397,6 +423,7 @@ runs:
               echo "❌ HACS load check (more-info: https://hacs.xyz/docs/publish/include#check-hacs)" >> "${{ github.action_path }}/result"
               touch "${{ github.action_path }}/error"
             fi
+            echo "::endgroup::"
         else
           echo "⚪ Skipped check: hacs" >> "${{ github.action_path }}/result"
         fi
