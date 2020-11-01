@@ -174,8 +174,8 @@ runs:
         data=$(jq .has_issues -r "${{ github.action_path }}/data/info") > /dev/null
         if [[ ! "${{ inputs.ignore }}" =~ issues ]]; then
           echo "::group::issues"
-          echo "https://github.com/${{ steps.init.outputs.repository }}/issues"
           echo "https://hacs.xyz/docs/publish/include#check-repository"
+          echo "https://github.com/${{ steps.init.outputs.repository }}/issues"
           if [ "${data}" == "true" ]; then
             echo "✅ The repository has issues enabled" >> "${{ github.action_path }}/result"
           else
