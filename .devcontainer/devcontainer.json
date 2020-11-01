@@ -1,0 +1,24 @@
+
+{
+    "name": "hacs/action",
+    "image": "ludeeus/container:python",
+    "context": "..",
+    "extensions": [
+      "github.vscode-pull-request-github",
+      "tabnine.tabnine-vscode",
+      "dbaeumer.vscode-eslint",
+      "ms-vscode.vscode-typescript-tslint-plugin",
+      "esbenp.prettier-vscode",
+      "bierner.lit-html",
+      "runem.lit-plugin"
+    ],
+    "settings": {
+      "files.eol": "\n",
+      "editor.tabSize": 2,
+      "terminal.integrated.shell.linux": "/bin/bash",
+      "editor.formatOnPaste": false,
+      "editor.formatOnSave": true,
+      "editor.formatOnType": true,
+      "files.trimTrailingWhitespace": true
+    }
+  }

@@ -1,0 +1,405 @@
+name: "HACS Action"
+description: "Repository validation action for HACS"
+branding:
+  icon: "terminal"
+  color: "gray-dark"
+inputs:
+  ignore:
+    description: "A space seperated list of ignored checks, for valid entries see README.md"
+    required: false
+    default: ""
+  category:
+    description: "The category of repository"
+    required: true
+  repository:
+    description: "The full name of repository"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        echo ${{steps.init.outputs.path }}
+        rm -rf "${{ github.action_path }}/data"
+        rm -rf "${{ github.action_path }}/hacs"
+        rm -rf "${{ github.action_path }}/brands"
+        rm -rf "${{ github.action_path }}/default"
+        rm -f "${{ github.action_path }}/error"
+        rm -f "${{ github.action_path }}/result"
+
+    - shell: bash
+      id: init
+      run: |
+        echo "::warning::This action is in beta stage, \
+        if you encounter issues please open an issue at https://github.com/hacs/integration/issues, \
+        for documentation about the stable HACS action see https://hacs.xyz/docs/publish/action"
+
+        mkdir -p "${{ github.action_path }}/data"
+        echo -e "Running checks...\n\n"
+
+        git clone --quiet --depth 1 https://github.com/hacs/integration.git "${{ github.action_path }}/hacs" > /dev/null
+
+        if [ ! -z "${{ github.event.inputs.repository }}" ]; then
+          repository="${{ github.event.inputs.repository }}"
+        elif [ ! -z "${{ inputs.repository }}" ]; then
+          repository="${{ inputs.repository }}"
+        else
+          repository="${{ github.repository }}"
+        fi
+
+        if [ ! -z "${{ github.event.inputs.category }}" ]; then
+          category="${{ github.event.inputs.category }}"
+        else
+          category="${{ inputs.category }}"
+        fi
+
+        if [ "${{ github.repository }}" != "$repository" ]; then
+          path="${{ github.action_path }}/repository"
+          rm -rf "$path"
+          git clone --quiet --depth 1 "https://github.com/$repository.git" "$path" > /dev/null
+        else
+          path="${{ github.workspace }}"
+        fi
+
+        bash "${{ github.action_path }}/helpers/input" repository "$repository"
+        bash "${{ github.action_path }}/helpers/input" category "$category"
+
+        bash "${{ github.action_path }}/helpers/info" "${{ github.token }}" "$repository" "${{ github.action_path }}" > /dev/null
+        bash "${{ github.action_path }}/helpers/topics" "${{ github.token }}" "$repository" "${{ github.action_path }}" > /dev/null
+
+        echo "::set-output name=repository::$repository"
+        echo "::set-output name=category::$category"
+        echo "::set-output name=path::$path"
+
+    - shell: bash
+      id: manifest
+      run: |
+        moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-manifest)"
+        if [ "${{ inputs.category }}" == "integration" ]; then
+          manifest=$(find "${{ steps.init.outputs.path }}" -name manifest.json)
+          if [ ! -f "$manifest" ]; then
+            echo "❌ manifest.json file not found $moreinfo";
+            exit 1
+          else
+            echo "::set-output name=path::$manifest"
+            for key in "issue_tracker domain documentation codeowners"; do
+              if [ -z "$(jq --arg entry "$key" '.[$entry]' -r "$manifest")" ]; then
+                echo "❌ manifest.json file missing key $key $moreinfo";
+                exit 1
+              fi
+            done
+          fi
+        fi
+
+    - shell: bash
+      run: |
+        data=$(jq .description -r "${{ github.action_path }}/data/info") > /dev/null
+        if [[ ! "${{ inputs.ignore }}" =~ description ]]; then
+          if [ ! -z "${data}" ]; then
+            echo "✅ The repository has a description" >> "${{ github.action_path }}/result"
+          else
+            echo "❌ The repository is missing a description (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
+            touch "${{ github.action_path }}/error"
+          fi
+        else
+          echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
+        fi
+
+    - shell: bash
+      run: |
+        data=$(jq .archived -r "${{ github.action_path }}/data/info") > /dev/null
+        if [[ ! "${{ inputs.ignore }}" =~ archived ]]; then
+          if [ ! -z "${data}" ]; then
+            echo "✅ The repository is not archived" >> "${{ github.action_path }}/result"
+          else
+            echo "❌ The repository is archived (more-info: https://hacs.xyz/docs/publish/include#check-archived)" >> "${{ github.action_path }}/result"
+            touch "${{ github.action_path }}/error"
+          fi
+        else
+          echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
+        fi
+
+    - shell: bash
+      run: |
+        if [ "${{ inputs.category }}" == "integration" ]; then
+          if [[ ! "${{ inputs.ignore }}" =~ brands ]]; then
+            domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
+            git clone --quiet --depth 1 https://github.com/home-assistant/brands.git "${{ github.action_path }}/brands" > /dev/null
+            exsist=$(find "${{ github.action_path }}/brands" -type d -name "$domain")
+            if [ ! -z "${exsist}" ]; then
+              echo "✅ $domain is added to https://github.com/home-assistant/brands, NICE!" >> "${{ github.action_path }}/result"
+            else
+              echo "❌ $domain is not added to https://github.com/home-assistant/brands (more-info: https://hacs.xyz/docs/publish/include#check-brands)" >> "${{ github.action_path }}/result"
+              touch "${{ github.action_path }}/error"
+            fi
+          else
+            echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
+          fi
+        fi
+
+    - shell: bash
+      run: |
+        data=$(jq .names[] -r "${{ github.action_path }}/data/topics") > /dev/null
+        if [[ ! "${{ inputs.ignore }}" =~ topics ]]; then
+          if [ ! -z "${data}" ]; then
+            echo "✅ The repository has topics" >> "${{ github.action_path }}/result"
+          else
+            echo "❌ The repository is missing topics (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
+            touch "${{ github.action_path }}/error"
+          fi
+        else
+          echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
+        fi
+
+    - shell: bash
+      run: |
+        data=$(jq .has_issues -r "${{ github.action_path }}/data/info") > /dev/null
+        if [[ ! "${{ inputs.ignore }}" =~ issues ]]; then
+          if [ "${data}" == "true" ]; then
+            echo "✅ The repository has issues enabled" >> "${{ github.action_path }}/result"
+          else
+            echo "❌ The repository has not issues enabled (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
+            touch "${{ github.action_path }}/error"
+          fi
+        else
+          echo "⚪ Skipped check: issues" >> "${{ github.action_path }}/result"
+        fi
+
+    - shell: bash
+      run: |
+        moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-fork)"
+        data=$(jq .fork -r "${{ github.action_path }}/data/info") > /dev/null
+        if [[ "${{ github.repository }}" == "hacs/default" ]]; then
+          if [ "${data}" == "false" ]; then
+            echo "✅ The repository is not a fork" >> "${{ github.action_path }}/result"
+          else
+            echo "⚪ The repository is a fork (more-info: https://hacs.xyz/docs/publish/include#check-fork)" >> "${{ github.action_path }}/result"
+          fi
+        fi
+
+    - shell: bash
+      id: hacsjson
+      run: |
+        moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-hacs-manifest)"
+        if [[ ! "${{ inputs.ignore }}" =~ hacsjson ]]; then
+          if [ ! -f "${{ steps.init.outputs.path }}/hacs.json" ]; then
+            echo "❌ hacs.json file not found in the root of the repository $moreinfo" >> "${{ github.action_path }}/result"
+            touch "${{ github.action_path }}/error"
+          else
+            echo "::set-output name=path::"${{ steps.init.outputs.path }}/hacs.json""
+            name=$(jq .name "${{ steps.init.outputs.path }}/hacs.json")
+            if [ ! -z "${name}" ]; then
+              echo "✅ hacs.json has the 'name' key set" >> "${{ github.action_path }}/result"
+            else
+              echo "❌ Missing 'name' from hacs.json (more-info: https://hacs.xyz/docs/publish/include#check-hacs-manifest)" >> "${{ github.action_path }}/result"
+              touch "${{ github.action_path }}/error"
+            fi
+          fi
+        else
+          echo "⚪ Skipped check: hacsjson" >> "${{ github.action_path }}/result"
+        fi
+
+    - shell: bash
+      run: |
+        echo "✅ This day ends with an 'y' ($(date +%A))" >> "${{ github.action_path }}/result"
+
+    - shell: bash
+      id: information
+      run: |
+        if [[ ! "${{ inputs.ignore }}" =~ information ]]; then
+          if [ -f "${{ steps.init.outputs.path }}/hacs.json" ]; then
+            render_readme=$(jq .render_readme -r "${{ steps.init.outputs.path }}/hacs.json")
+          fi
+          if [ -f "${{ steps.init.outputs.path }}/README.md" ] && [ "$render_readme" == "true" ]; then
+            echo "✅ README.md exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/README.md"
+
+          elif [ -f "${{ steps.init.outputs.path }}/readme.md" ] && [ "$render_readme" == "true" ]; then
+            echo "✅ readme.md exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/readme.md"
+
+          elif [ -f "${{ steps.init.outputs.path }}/README.MD" ] && [ "$render_readme" == "true" ]; then
+            echo "✅ README.MD exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/README.MD"
+
+          elif [ -f "${{ steps.init.outputs.path }}/readme.MD" ] && [ "$render_readme" == "true" ]; then
+            echo "✅ readme.MD exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/readme.MD"
+
+          elif [ -f "${{ steps.init.outputs.path }}/readme" ] && [ "$render_readme" == "true" ]; then
+            echo "✅ readme exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/readme"
+
+          elif [ -f "${{ steps.init.outputs.path }}/README" ] && [ "$render_readme" == "true" ]; then
+            echo "✅ README exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/README"
+
+          elif [ -f "${{ steps.init.outputs.path }}/INFO.md" ]; then
+            echo "✅ INFO.md exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/INFO.md"
+
+          elif [ -f "${{ steps.init.outputs.path }}/info.md" ]; then
+            echo "✅ info.md exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/info.md"
+
+          elif [ -f "${{ steps.init.outputs.path }}/INFO.MD" ]; then
+            echo "✅ INFO.MD exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/INFO.MD"
+
+          elif [ -f "${{ steps.init.outputs.path }}/info.MD" ]; then
+            echo "✅ info.MD exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/info.MD"
+
+          elif [ -f "${{ steps.init.outputs.path }}/INFO" ]; then
+            echo "✅ INFO exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/INFO"
+
+          elif [ -f "${{ steps.init.outputs.path }}/info" ]; then
+            echo "✅ info exsists" >> "${{ github.action_path }}/result"
+            echo "::set-output name=path::${{ steps.init.outputs.path }}/info"
+          else
+            echo "❌ Information file not found (more-info: https://hacs.xyz/docs/publish/include#check-info)" >> "${{ github.action_path }}/result"
+            touch "${{ github.action_path }}/error"
+          fi
+        else
+          echo "⚪ Skipped check: information" >> "${{ github.action_path }}/result"
+        fi
+
+    - shell: bash
+      run: |
+        if [ "${{ inputs.category }}" == "integration" ]; then
+          if [[ ! "${{ inputs.ignore }}" =~ requirements ]]; then
+            requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r .requirements) > /dev/null
+            if [ ! -z "$requirements" ]; then
+              mkdir -p "${{ steps.init.outputs.path }}/requirements"
+              wget -q -O "${{ github.action_path }}/helpers/requirements/validate_requirements.py" \
+                https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/scripts/validate_requirements.py
+              cd "${{ github.action_path }}/helpers/requirements"
+              cat "${{ steps.manifest.outputs.path }}" | jq -r .requirements > ./requirements.json
+              docker build . -t homeassistant/home-assistant:beta
+              set +e
+              docker run homeassistant/home-assistant:beta
+              requirements=$?
+              set -e
+              if [ "${requirements}" == 0 ]; then
+                  echo "✅ Requirements validation" >> "${{ github.action_path }}/result"
+              else
+                echo "❌ Requirements validation" >> "${{ github.action_path }}/result"
+                touch "${{ github.action_path }}/error"
+              fi
+            fi
+          else
+            echo "⚪ Skipped check: requirements" >> "${{ github.action_path }}/result"
+          fi
+        fi
+
+    - shell: bash
+      run: |
+        if [ "plugin" == ${{ inputs.category }} ] || [ "theme" == ${{ inputs.category }} ]; then
+          if [[ ! "${{ inputs.ignore }}" =~ images ]]; then
+            images=$(python3 ${{ github.action_path }}/helpers/findimages.py "${{ steps.information.outputs.path }}")
+            echo ${markdown}
+            if [ ! -z "${images}" ]; then
+              echo "✅ Information file has images" >> "${{ github.action_path }}/result"
+            else
+              echo "❌ There should be images to show the user what they get." >> "${{ github.action_path }}/result"
+              touch "${{ github.action_path }}/error"
+            fi
+          else
+            echo "⚪ Skipped check: images" >> "${{ github.action_path }}/result"
+          fi
+        fi
+
+    - shell: bash
+      run: |
+        if [ "${{ inputs.category }}" == "integration" ]; then
+          if [[ ! "${{ inputs.ignore }}" =~ wheels ]]; then
+            requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r .requirements) > /dev/null
+            if [ ! -z "$requirements" ]; then
+              domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
+              set +e
+              curl -sSLf "https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/components/$domain.json" > /dev/null
+              wheels=$?
+              set -e
+              if [ "${wheels}" == 0 ]; then
+                  echo "✅ Python wheels" >> "${{ github.action_path }}/result"
+              else
+                echo "❌ Python wheels (more-info: https://hacs.xyz/docs/publish/include#check-wheels" >> "${{ github.action_path }}/result"
+                touch "${{ github.action_path }}/error"
+              fi
+            fi
+          else
+            echo "⚪ Skipped check: wheels" >> "${{ github.action_path }}/result"
+          fi
+        fi
+
+    - shell: bash
+      run: |
+        if [ "${{ inputs.category }}" == "integration" ]; then
+          if [[ ! "${{ inputs.ignore }}" =~ hassfest ]]; then
+            domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
+            integration_path=$(dirname ${{ steps.manifest.outputs.path }})
+            set +e
+            docker run \
+              --entrypoint="" \
+              -w="/usr/src/homeassistant" \
+              -v "$integration_path":"/$domain" \
+              homeassistant/home-assistant:beta \
+              /bin/bash -c "\
+                python3 -m pip --disable-pip-version-check install \
+                  pipdeptree==1.0.0 \
+                  stdlib-list==0.7.0 \
+                  tqdm==4.48.2 \
+                \
+                && python3 -m \
+                  script.hassfest \
+                  --action validate \
+                  --integration-path /$domain \
+                "
+            hassfest=$?
+            set -e
+            if [ "${hassfest}" == 0 ]; then
+                echo "✅ Hassfest" >> "${{ github.action_path }}/result"
+            else
+              echo "❌ Hassfest (more-info: https://hacs.xyz/docs/publish/include#check-hassfest)" >> "${{ github.action_path }}/result"
+              touch "${{ github.action_path }}/error"
+            fi
+          else
+            echo "⚪ Skipped check: hassfest" >> "${{ github.action_path }}/result"
+          fi
+        fi
+
+    - shell: bash
+      run: |
+        if [[ ! "${{ inputs.ignore }}" =~ hacs ]]; then
+          cd "${{ github.action_path }}/hacs/action"
+          cp "${{ github.action_path }}/helpers/action.py" "./action.py"
+          docker build . -t hacs/action
+          set +e
+          docker run \
+            -e INPUT_GITHUB_TOKEN="${{ github.token }}" \
+            -e GITHUB_ACTOR="${{ github.actor }}" \
+            -e GITHUB_ACTION \
+            -e GITHUB_WORKSPACE="/github/workspace" \
+            -e GITHUB_EVENT_PATH="/github/event.json" \
+            -e GITHUB_REPOSITORY="${{ github.repository }}" \
+            -e CHANGED_FILES="$CHANGED_FILES" \
+            -e REPOSITORY="${{ steps.init.outputs.repository }}" \
+            -e CATEGORY="${{ steps.init.outputs.category }}" \
+            -v "${{ github.event_path }}":/github/event.json \
+            -v "${{ github.workspace }}":/github/workspace \
+            hacs/action
+            hacs=$?
+            set -e
+            if [ "${hacs}" == 0 ]; then
+                echo "✅ HACS load check" >> "${{ github.action_path }}/result"
+            else
+              echo "❌ HACS load check (more-info: https://hacs.xyz/docs/publish/include#check-hacs)" >> "${{ github.action_path }}/result"
+              touch "${{ github.action_path }}/error"
+            fi
+        else
+          echo "⚪ Skipped check: hacs" >> "${{ github.action_path }}/result"
+        fi
+
+    - shell: bash
+      run: bash "${{ github.action_path }}/helpers/wrapup" "${{ github.action_path }}"

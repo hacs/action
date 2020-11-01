@@ -1,0 +1,115 @@
+name: HACS Action
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    name: "integration: ${{ matrix.repository }}"
+    strategy:
+      matrix:
+        repository:
+          - hacs/integration
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: HACS Action
+        uses: ./
+        with:
+          category: integration
+          repository: ${{ matrix.repository }}
+
+  theme:
+    runs-on: ubuntu-latest
+    name: "theme: ${{ matrix.repository }}"
+    strategy:
+      matrix:
+        repository:
+          - basnijholt/lovelace-ios-dark-mode-theme
+          - home-assistant-community-themes/template
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: HACS Action
+        uses: ./
+        with:
+          category: theme
+          repository: ${{ matrix.repository }}
+
+  plugin:
+    runs-on: ubuntu-latest
+    name: "plugin: ${{ matrix.repository }}"
+    strategy:
+      matrix:
+        repository:
+          - ofekashery/vertical-stack-in-card
+          - custom-cards/boilerplate-card
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: HACS Action
+        uses: ./
+        with:
+          category: plugin
+          repository: ${{ matrix.repository }}
+
+  netdaemon:
+    runs-on: ubuntu-latest
+    name: "netdaemon: ${{ matrix.repository }}"
+    strategy:
+      matrix:
+        repository:
+          - hacs/ND-NotifyUpdates
+          - net-daemon/netdaemon-app-template
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: HACS Action
+        uses: ./
+        with:
+          category: netdaemon
+          ignore: topics
+          repository: ${{ matrix.repository }}
+
+  appdaemon:
+    runs-on: ubuntu-latest
+    name: "appdaemon: ${{ matrix.repository }}"
+    strategy:
+      matrix:
+        repository:
+          - ludeeus/ad-hacs
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: HACS Action
+        uses: ./
+        with:
+          category: appdaemon
+          ignore: hacsjson
+          repository: ${{ matrix.repository }}
+
+  python_script:
+    runs-on: ubuntu-latest
+    name: "python_scripts: ${{ matrix.repository }}"
+    strategy:
+      matrix:
+        repository:
+          - ludeeus/ps-hacs
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: HACS Action
+        uses: ./
+        with:
+          category: python_scripts
+          ignore: hacsjson information
+          repository: ${{ matrix.repository }}

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ -z "${2}" ]; then
+  echo "❌ Missing required action input for '${1}'";
+  exit 1
+fi

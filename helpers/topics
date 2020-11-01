@@ -1,0 +1,6 @@
+#!/bin/bash
+
+curl -sSL \
+  -H "Authorization: token $1" \
+  -H "Accept: application/vnd.github.mercy-preview+json" \
+  "https://api.github.com/repos/$2/topics" > "$3"/data/topics
