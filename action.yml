@@ -305,7 +305,7 @@ runs:
       run: |
         if [ "${{ inputs.category }}" == "integration" ]; then
           if [[ ! "${{ inputs.ignore }}" =~ requirements ]]; then
-            requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r .requirements) > /dev/null
+            requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r '. | select(.requirements != null) | .requirements[]') > /dev/null
             if [ ! -z "$requirements" ]; then
               echo "::group::requirements"
               mkdir -p "${{ steps.init.outputs.path }}/requirements"
@@ -356,7 +356,7 @@ runs:
       run: |
         if [ "${{ inputs.category }}" == "integration" ]; then
           if [[ ! "${{ inputs.ignore }}" =~ wheels ]]; then
-            requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r .requirements) > /dev/null
+            requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r '. | select(.requirements != null) | .requirements[]') > /dev/null
             if [ ! -z "$requirements" ]; then
               echo "::group::wheels"
               echo "https://hacs.xyz/docs/publish/include#check-wheels"
