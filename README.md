@@ -68,7 +68,7 @@ All these checks can be disbled with `with.ignore`:
 To use a specific version of this action instead of `main` set the value after `@` in the `uses` definition, like:
 
 ```yaml
-uses: hacs/action@20.11.0
+uses: hacs/action@xx.xx.x
 ```
 
 If you do this, please enable [dependabot](https://dependabot.com/github-actions/) to help you keep that up to date.
