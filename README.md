@@ -45,7 +45,6 @@ All these checks can be disbled with `with.ignore`:
 | `description`  | [More info][description] | Checks if the repository has a description                          |
 | `hacs`         | [More info][hacs]        | Loads the repository with HACS                                      |
 | `hacsjson`     | [More info][hacsjson]    | Checks that hacs.json exists                                        |
-| `hassfest`     | [More info][hassfest]    | Validates the integration with hassfest                             |
 | `images`       | [More info][images]      | Checks that the info file has images                                |
 | `information`  | [More info][information] | Checks that the repo has an information file                        |
 | `issues`       | [More info][issues]      | Checks that issues are enabled                                      |
@@ -58,7 +57,6 @@ All these checks can be disbled with `with.ignore`:
 [description]: https://hacs.xyz/docs/publish/include#check-repository
 [hacs]: https://hacs.xyz/docs/publish/include#check-hacs
 [hacsjson]: https://hacs.xyz/docs/publish/include#check-hacs-manifest
-[hassfest]: https://hacs.xyz/docs/publish/include#check-hassfest
 [images]: https://hacs.xyz/docs/publish/include#check-images
 [information]: https://hacs.xyz/docs/publish/include#check-info
 [issues]: https://hacs.xyz/docs/publish/include#check-repository

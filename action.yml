@@ -382,45 +382,6 @@ runs:
 
     - shell: bash
       run: |
-        if [ "${{ inputs.category }}" == "integration" ]; then
-          if [[ ! "${{ inputs.ignore }}" =~ hassfest ]]; then
-            echo "::group::hassfest"
-            echo "https://hacs.xyz/docs/publish/include#check-hassfest"
-            domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
-            integration_path=$(dirname ${{ steps.manifest.outputs.path }})
-            set +e
-            docker run \
-              --entrypoint="" \
-              -w="/usr/src/homeassistant" \
-              -v "$integration_path":"/$domain" \
-              homeassistant/home-assistant:beta \
-              /bin/bash -c "\
-                python3 -m pip --disable-pip-version-check install \
-                  pipdeptree==1.0.0 \
-                  stdlib-list==0.7.0 \
-                  tqdm==4.48.2 \
-                \
-                && python3 -m \
-                  script.hassfest \
-                  --action validate \
-                  --integration-path /$domain \
-                "
-            hassfest=$?
-            set -e
-            if [ "${hassfest}" == 0 ]; then
-                echo "✅ Hassfest" >> "${{ github.action_path }}/result"
-            else
-              echo "❌ Hassfest (more-info: https://hacs.xyz/docs/publish/include#check-hassfest)" >> "${{ github.action_path }}/result"
-              touch "${{ github.action_path }}/error"
-            fi
-            echo "::endgroup::"
-          else
-            echo "⚪ Skipped check: hassfest" >> "${{ github.action_path }}/result"
-          fi
-        fi
-
-    - shell: bash
-      run: |
         if [[ ! "${{ inputs.ignore }}" =~ hacs ]]; then
           echo "::group::hacs"
           echo "https://hacs.xyz/docs/publish/include#check-hacs"
