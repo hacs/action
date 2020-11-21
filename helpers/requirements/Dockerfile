@@ -5,7 +5,9 @@ COPY . /entry/requirements
 WORKDIR /entry
 
 RUN \
-  python3 -m pip --disable-pip-version-check install -U \
+  apk add --no-cache alpine-sdk \
+  \
+  && python3 -m pip --disable-pip-version-check install -U \
     setuptools \
     pip \
   && python3 -m pip install \
