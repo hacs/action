@@ -96,7 +96,7 @@ runs:
         if [[ ! "${{ inputs.ignore }}" =~ description ]]; then
           echo "::group::description"
           echo "https://hacs.xyz/docs/publish/include#check-repository"
-          if [ ! -z "${data}" ]; then
+          if [ ! -z "${data}" ] && [ "${data}" != "null" ]; then
             echo "${data}"
             echo "✅ The repository has a description" >> "${{ github.action_path }}/result"
           else
