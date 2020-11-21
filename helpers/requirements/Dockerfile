@@ -5,7 +5,11 @@ COPY . /entry/requirements
 WORKDIR /entry
 
 RUN \
-  apk add --no-cache alpine-sdk \
+  apk add --no-cache \
+    alpine-sdk \
+    libffi-dev \
+    openssl-dev \
+    python3-dev \
   \
   && python3 -m pip --disable-pip-version-check install -U \
     setuptools \
