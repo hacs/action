@@ -2,8 +2,6 @@
 
 _Repository validation action for HACS_
 
-**Status**: beta (For the current stable action, see https://hacs.xyz/docs/publish/action)
-
 ## Inputs
 
 | Input    | Description                                                                              |

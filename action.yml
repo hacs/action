@@ -30,10 +30,6 @@ runs:
     - shell: bash
       id: init
       run: |
-        echo -e "::warning::This action is in beta stage, \
-        if you encounter issues please open an issue at https://github.com/hacs/integration/issues, \
-        for documentation about the stable HACS action see https://hacs.xyz/docs/publish/action\n"
-
         mkdir -p "${{ github.action_path }}/data"
 
         git clone --quiet --depth 1 https://github.com/hacs/integration.git "${{ github.action_path }}/hacs" > /dev/null
