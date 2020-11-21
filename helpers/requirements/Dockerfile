@@ -10,6 +10,7 @@ RUN \
     libffi-dev \
     openssl-dev \
     python3-dev \
+    glib-dev \
   \
   && python3 -m pip --disable-pip-version-check install -U \
     setuptools \
