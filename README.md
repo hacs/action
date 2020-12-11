@@ -34,7 +34,7 @@ jobs:
 
 ## Ignorable checks
 
-All these checks can be disbled with `with.ignore`:
+All these checks can be disabled with `with.ignore`:
 
 | Check          | More info                | Description                                                         |
 | -------------- | ------------------------ | ------------------------------------------------------------------- |
