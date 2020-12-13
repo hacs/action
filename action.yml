@@ -133,13 +133,14 @@ runs:
             echo "https://hacs.xyz/docs/publish/include#check-brands"
             domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
             git clone --quiet --depth 1 https://github.com/home-assistant/brands.git "${{ github.action_path }}/brands" > /dev/null
-            exsist=$(find "${{ github.action_path }}/brands" -type d -name "$domain")
-            if [ ! -z "${exsist}" ]; then
-              echo "${exsist}"
+            exists=$(find "${{ github.action_path }}/brands" -type d -name "$domain")
+            if [ ! -z "${exists}" ]; then
+              echo "${exists}"
               echo "✅ $domain is added to https://github.com/home-assistant/brands, NICE!" >> "${{ github.action_path }}/result"
             else
               echo "❌ $domain is not added to https://github.com/home-assistant/brands (more-info: https://hacs.xyz/docs/publish/include#check-brands)" >> "${{ github.action_path }}/result"
-              touch "${{ github.action_path }}/error"
+	      # NOTE: The following should not be a HARD failure, but a warning.
+              # touch "${{ github.action_path }}/error"
             fi
             echo "::endgroup::"
           else
@@ -238,51 +239,51 @@ runs:
             render_readme=$(jq .render_readme -r "${{ steps.init.outputs.path }}/hacs.json")
           fi
           if [ -f "${{ steps.init.outputs.path }}/README.md" ] && [ "$render_readme" == "true" ]; then
-            echo "✅ README.md exsists" >> "${{ github.action_path }}/result"
+            echo "✅ README.md exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/README.md"
 
           elif [ -f "${{ steps.init.outputs.path }}/readme.md" ] && [ "$render_readme" == "true" ]; then
-            echo "✅ readme.md exsists" >> "${{ github.action_path }}/result"
+            echo "✅ readme.md exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/readme.md"
 
           elif [ -f "${{ steps.init.outputs.path }}/README.MD" ] && [ "$render_readme" == "true" ]; then
-            echo "✅ README.MD exsists" >> "${{ github.action_path }}/result"
+            echo "✅ README.MD exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/README.MD"
 
           elif [ -f "${{ steps.init.outputs.path }}/readme.MD" ] && [ "$render_readme" == "true" ]; then
-            echo "✅ readme.MD exsists" >> "${{ github.action_path }}/result"
+            echo "✅ readme.MD exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/readme.MD"
 
           elif [ -f "${{ steps.init.outputs.path }}/readme" ] && [ "$render_readme" == "true" ]; then
-            echo "✅ readme exsists" >> "${{ github.action_path }}/result"
+            echo "✅ readme exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/readme"
 
           elif [ -f "${{ steps.init.outputs.path }}/README" ] && [ "$render_readme" == "true" ]; then
-            echo "✅ README exsists" >> "${{ github.action_path }}/result"
+            echo "✅ README exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/README"
 
           elif [ -f "${{ steps.init.outputs.path }}/INFO.md" ]; then
-            echo "✅ INFO.md exsists" >> "${{ github.action_path }}/result"
+            echo "✅ INFO.md exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/INFO.md"
 
           elif [ -f "${{ steps.init.outputs.path }}/info.md" ]; then
-            echo "✅ info.md exsists" >> "${{ github.action_path }}/result"
+            echo "✅ info.md exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/info.md"
 
           elif [ -f "${{ steps.init.outputs.path }}/INFO.MD" ]; then
-            echo "✅ INFO.MD exsists" >> "${{ github.action_path }}/result"
+            echo "✅ INFO.MD exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/INFO.MD"
 
           elif [ -f "${{ steps.init.outputs.path }}/info.MD" ]; then
-            echo "✅ info.MD exsists" >> "${{ github.action_path }}/result"
+            echo "✅ info.MD exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/info.MD"
 
           elif [ -f "${{ steps.init.outputs.path }}/INFO" ]; then
-            echo "✅ INFO exsists" >> "${{ github.action_path }}/result"
+            echo "✅ INFO exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/INFO"
 
           elif [ -f "${{ steps.init.outputs.path }}/info" ]; then
-            echo "✅ info exsists" >> "${{ github.action_path }}/result"
+            echo "✅ info exists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/info"
           else
             echo "❌ Information file not found (more-info: https://hacs.xyz/docs/publish/include#check-info)" >> "${{ github.action_path }}/result"
@@ -367,7 +368,8 @@ runs:
                   echo "✅ Python wheels" >> "${{ github.action_path }}/result"
               else
                 echo "❌ Python wheels (more-info: https://hacs.xyz/docs/publish/include#check-wheels" >> "${{ github.action_path }}/result"
-                touch "${{ github.action_path }}/error"
+	        # NOTE: The following should not be a HARD failure, but a warning.
+                # touch "${{ github.action_path }}/error"
               fi
               echo "::endgroup::"
             fi
