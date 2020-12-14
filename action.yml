@@ -138,7 +138,7 @@ runs:
               echo "${exists}"
               echo "✅ $domain is added to https://github.com/home-assistant/brands, NICE!" >> "${{ github.action_path }}/result"
             else
-              echo "❌ $domain is not added to https://github.com/home-assistant/brands (more-info: https://hacs.xyz/docs/publish/include#check-brands)" >> "${{ github.action_path }}/result"
+              echo "⚠ $domain is not added to https://github.com/home-assistant/brands (more-info: https://hacs.xyz/docs/publish/include#check-brands)" >> "${{ github.action_path }}/result"
               # NOTE: The following should not be a HARD failure, but a warning.
               # touch "${{ github.action_path }}/error"
             fi
@@ -367,7 +367,7 @@ runs:
                   echo "${wheelsurl}"
                   echo "✅ Python wheels" >> "${{ github.action_path }}/result"
               else
-                echo "❌ Python wheels (more-info: https://hacs.xyz/docs/publish/include#check-wheels" >> "${{ github.action_path }}/result"
+                echo "⚠ Python wheels (more-info: https://hacs.xyz/docs/publish/include#check-wheels" >> "${{ github.action_path }}/result"
                 # NOTE: The following should not be a HARD failure, but a warning.
                 # touch "${{ github.action_path }}/error"
               fi
