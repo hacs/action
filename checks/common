@@ -3,3 +3,5 @@
 function error() {
   printenv
 }
+
+error()
