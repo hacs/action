@@ -23,6 +23,6 @@ function checkError () {
 }
 
 
-funciton setOutput () {
+function setOutput () {
   echo "::set-output name=$1::$2"
 }
