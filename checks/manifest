@@ -4,7 +4,7 @@ source "$GITHUB_ACTION_PATH/checks/common"
 URL="https://hacs.xyz/docs/publish/include#check-manifest"
 GROUP="manifest"
 
-function check () {
+function checkRun () {
   manifest=$(find "$1" -name manifest.json)
   if [ ! -f "$manifest" ]; then
     checkError "manifest.json file not found" $URL
@@ -22,5 +22,5 @@ function check () {
 }
 
 checkInit "$GROUP" "$URL"
-check $*
+checkRun $*
 checkComplete
