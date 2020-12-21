@@ -19,18 +19,12 @@ runs:
   steps:
     - shell: bash
       run: |
-        rm -rf "${{ github.action_path }}/data"
-        rm -rf "${{ github.action_path }}/hacs"
-        rm -rf "${{ github.action_path }}/brands"
-        rm -rf "${{ github.action_path }}/default"
-        rm -f "${{ github.action_path }}/error"
-        rm -f "${{ github.action_path }}/result"
+        bash "${{ github.action_path }}/helpers/cleanup"
 
     - shell: bash
       id: init
       run: |
         mkdir -p "${{ github.action_path }}/data"
-        bash "${{ github.action_path }}/checks/common"
 
         git clone --quiet --depth 1 https://github.com/hacs/integration.git "${{ github.action_path }}/hacs" > /dev/null
 
@@ -69,24 +63,8 @@ runs:
     - shell: bash
       id: manifest
       run: |
-        moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-manifest )"
         if [ "${{ inputs.category }}" == "integration" ]; then
-          bash "${{ github.action_path }}/checks/manifest"
-          manifest=$(find "${{ steps.init.outputs.path }}" -name manifest.json)
-          if [ ! -f "$manifest" ]; then
-            echo "❌ manifest.json file not found $moreinfo";
-            exit 1
-          else
-            echo "::set-output name=path::$manifest"
-            cat "$manifest" | jq .
-            for key in "issue_tracker domain documentation codeowners"; do
-              if [ -z "$(jq --arg entry "$key" '.[$entry]' -r "$manifest")" ]; then
-                echo "❌ manifest.json file missing key $key $moreinfo";
-                exit 1
-              fi
-            done
-          fi
-          echo "::endgroup::"
+          bash "${{ github.action_path }}/checks/manifest" "${{ steps.init.outputs.path }}"
         fi
 
     - shell: bash

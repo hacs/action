@@ -4,12 +4,23 @@ source "$GITHUB_ACTION_PATH/checks/common"
 URL="https://hacs.xyz/docs/publish/include#check-manifest"
 GROUP="manifest"
 
+function check () {
+  manifest=$(find "$1" -name manifest.json)
+  if [ ! -f "$manifest" ]; then
+    echo "❌ manifest.json file not found $moreinfo";
+    exit 1
+  else
+    echo "::set-output name=path::$manifest"
+    cat "$manifest" | jq .
+    for key in "issue_tracker domain documentation codeowners"; do
+      if [ -z "$(jq --arg entry "$key" '.[$entry]' -r "$manifest")" ]; then
+        echo "❌ manifest.json file missing key $key $moreinfo";
+        exit 1
+      fi
+    done
+  fi
+}
 
 checkInit "$GROUP" "$URL"
-
-checkSuccess test
-
-checkError test
-checkError test $URL
-
+check $*
 checkComplete
