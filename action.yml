@@ -31,7 +31,7 @@ runs:
       id: init
       run: |
         mkdir -p "${{ github.action_path }}/data"
-        source "${{ github.action_path }}/common"
+        source "${{ github.action_path }}/checks/common"
         error()
 
         git clone --quiet --depth 1 https://github.com/hacs/integration.git "${{ github.action_path }}/hacs" > /dev/null
