@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function error() {
+function error () {
   printenv
 }
 
