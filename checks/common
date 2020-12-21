@@ -4,4 +4,4 @@ function error () {
   printenv
 }
 
-error()
+error
