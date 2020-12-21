@@ -1,13 +1,22 @@
 #!/bin/bash
 
+function checkInit () {
+  echo "::group::$1"
+  echo "$2"
+}
+
+function checkComplete () {
+  echo "::endgroup::"
+}
+
 function checkSuccess () {
   echo "✅ $1" >> "$GITHUB_ACTION_PATH/result"
 }
 
 function checkError () {
-  msg = $1
+  msg="$1"
   if [ ! -z "$2" ]; then
-    msg += " (more-info: $2 )"
+    msg+=" (more-info: $2 )"
   fi
   echo "❌ $msg" >> "$GITHUB_ACTION_PATH/result"
   touch "$GITHUB_ACTION_PATH/error"

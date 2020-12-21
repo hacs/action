@@ -1,13 +1,15 @@
 #!/bin/bash
 source "$GITHUB_ACTION_PATH/checks/common"
 
-moreinfo="https://hacs.xyz/docs/publish/include#check-manifest"
-group="manifest"
+URL="https://hacs.xyz/docs/publish/include#check-manifest"
+GROUP="manifest"
 
 
-jq . "$GITHUB_EVENT_PATH"
+checkInit "$GROUP" "$URL"
 
 checkSuccess test
 
 checkError test
-checkError test $moreinfo
+checkError test $URL
+
+checkComplete

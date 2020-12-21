@@ -69,11 +69,9 @@ runs:
     - shell: bash
       id: manifest
       run: |
-        bash "${{ github.action_path }}/checks/manifest"
         moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-manifest )"
         if [ "${{ inputs.category }}" == "integration" ]; then
-          echo "::group::manifest"
-          echo "https://hacs.xyz/docs/publish/include#check-manifest"
+          bash "${{ github.action_path }}/checks/manifest"
           manifest=$(find "${{ steps.init.outputs.path }}" -name manifest.json)
           if [ ! -f "$manifest" ]; then
             echo "❌ manifest.json file not found $moreinfo";
