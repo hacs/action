@@ -1,7 +1,5 @@
 #!/bin/bash
 
-actionPath=$(jq . $GITHUB_EVENT_PATH)
-
 function error() {
-  echo "$actionPath"
+  printenv
 }

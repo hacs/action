@@ -19,7 +19,6 @@ runs:
   steps:
     - shell: bash
       run: |
-        echo ${{steps.init.outputs.path }}
         rm -rf "${{ github.action_path }}/data"
         rm -rf "${{ github.action_path }}/hacs"
         rm -rf "${{ github.action_path }}/brands"
