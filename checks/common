@@ -1,7 +1,14 @@
 #!/bin/bash
 
-function error () {
-  printenv
+function checkSuccess () {
+  echo "✅ $1" >> "$GITHUB_ACTION_PATH/result"
 }
 
-error
+function checkError () {
+  msg = $1
+  if [ ! -z "$2" ]; then
+    msg += " (more-info: $2 )"
+  fi
+  echo "❌ $msg" >> "$GITHUB_ACTION_PATH/result"
+  touch "$GITHUB_ACTION_PATH/error"
+}

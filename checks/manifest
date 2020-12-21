@@ -1,0 +1,13 @@
+#!/bin/bash
+source "$GITHUB_ACTION_PATH/checks/common"
+
+moreinfo="https://hacs.xyz/docs/publish/include#check-manifest"
+group="manifest"
+
+
+jq . "$GITHUB_EVENT_PATH"
+
+checkSuccess test
+
+checkError test
+checkError test $moreinfo
