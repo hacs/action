@@ -7,14 +7,14 @@ GROUP="manifest"
 function check () {
   manifest=$(find "$1" -name manifest.json)
   if [ ! -f "$manifest" ]; then
-    echo "❌ manifest.json file not found $moreinfo";
+    checkError "manifest.json file not found" $URL
     exit 1
   else
-    echo "::set-output name=path::$manifest"
+    setOutput "path" "$manifest"
     cat "$manifest" | jq .
     for key in "issue_tracker domain documentation codeowners"; do
       if [ -z "$(jq --arg entry "$key" '.[$entry]' -r "$manifest")" ]; then
-        echo "❌ manifest.json file missing key $key $moreinfo";
+        checkError "manifest.json file missing key $key $moreinfo" $URL
         exit 1
       fi
     done

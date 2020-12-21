@@ -21,3 +21,8 @@ function checkError () {
   echo "❌ $msg" >> "$GITHUB_ACTION_PATH/result"
   touch "$GITHUB_ACTION_PATH/error"
 }
+
+
+funciton setOutput () {
+  echo "::set-output name=$1::$2"
+}
