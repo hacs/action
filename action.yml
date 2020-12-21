@@ -69,7 +69,7 @@ runs:
     - shell: bash
       id: manifest
       run: |
-        moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-manifest)"
+        moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-manifest )"
         if [ "${{ inputs.category }}" == "integration" ]; then
           echo "::group::manifest"
           echo "https://hacs.xyz/docs/publish/include#check-manifest"
@@ -100,7 +100,7 @@ runs:
             echo "${data}"
             echo "✅ The repository has a description" >> "${{ github.action_path }}/result"
           else
-            echo "❌ The repository is missing a description (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
+            echo "❌ The repository is missing a description (more-info: https://hacs.xyz/docs/publish/include#check-repository )" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
           echo "::endgroup::"
@@ -117,7 +117,7 @@ runs:
           if [ "${data}" == "false" ]; then
             echo "✅ The repository is not archived" >> "${{ github.action_path }}/result"
           else
-            echo "❌ The repository is archived (more-info: https://hacs.xyz/docs/publish/include#check-archived)" >> "${{ github.action_path }}/result"
+            echo "❌ The repository is archived (more-info: https://hacs.xyz/docs/publish/include#check-archived )" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
           echo "::endgroup::"
@@ -138,7 +138,7 @@ runs:
               echo "${exsist}"
               echo "✅ $domain is added to https://github.com/home-assistant/brands NICE!" >> "${{ github.action_path }}/result"
             else
-              echo "❌ $domain is not added to https://github.com/home-assistant/brands (more-info: https://hacs.xyz/docs/publish/include#check-brands)" >> "${{ github.action_path }}/result"
+              echo "❌ $domain is not added to https://github.com/home-assistant/brands (more-info: https://hacs.xyz/docs/publish/include#check-brands )" >> "${{ github.action_path }}/result"
               touch "${{ github.action_path }}/error"
             fi
             echo "::endgroup::"
@@ -157,7 +157,7 @@ runs:
             echo "${data}"
             echo "✅ The repository has topics" >> "${{ github.action_path }}/result"
           else
-            echo "❌ The repository is missing topics (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
+            echo "❌ The repository is missing topics (more-info: https://hacs.xyz/docs/publish/include#check-repository )" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
           echo "::endgroup::"
@@ -175,7 +175,7 @@ runs:
           if [ "${data}" == "true" ]; then
             echo "✅ The repository has issues enabled" >> "${{ github.action_path }}/result"
           else
-            echo "❌ The repository has not issues enabled (more-info: https://hacs.xyz/docs/publish/include#check-repository)" >> "${{ github.action_path }}/result"
+            echo "❌ The repository has not issues enabled (more-info: https://hacs.xyz/docs/publish/include#check-repository )" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
           echo "::endgroup::"
@@ -193,7 +193,7 @@ runs:
           if [ "${data}" == "false" ]; then
             echo "✅ The repository is not a fork" >> "${{ github.action_path }}/result"
           else
-            echo "⚪ The repository is a fork (more-info: https://hacs.xyz/docs/publish/include#check-fork)" >> "${{ github.action_path }}/result"
+            echo "⚪ The repository is a fork (more-info: https://hacs.xyz/docs/publish/include#check-fork )" >> "${{ github.action_path }}/result"
           fi
           echo "::endgroup::"
         fi
@@ -215,7 +215,7 @@ runs:
             if [ ! -z "${name}" ]; then
               echo "✅ hacs.json has the 'name' key set" >> "${{ github.action_path }}/result"
             else
-              echo "❌ Missing 'name' from hacs.json (more-info: https://hacs.xyz/docs/publish/include#check-hacs-manifest)" >> "${{ github.action_path }}/result"
+              echo "❌ Missing 'name' from hacs.json (more-info: https://hacs.xyz/docs/publish/include#check-hacs-manifest )" >> "${{ github.action_path }}/result"
               touch "${{ github.action_path }}/error"
             fi
           fi
@@ -285,7 +285,7 @@ runs:
             echo "✅ info exsists" >> "${{ github.action_path }}/result"
             filepath="${{ steps.init.outputs.path }}/info"
           else
-            echo "❌ Information file not found (more-info: https://hacs.xyz/docs/publish/include#check-info)" >> "${{ github.action_path }}/result"
+            echo "❌ Information file not found (more-info: https://hacs.xyz/docs/publish/include#check-info )" >> "${{ github.action_path }}/result"
             touch "${{ github.action_path }}/error"
           fi
           echo "::set-output name=path::$filepath"
@@ -403,7 +403,7 @@ runs:
             if [ "${hacs}" == 0 ]; then
                 echo "✅ HACS load check" >> "${{ github.action_path }}/result"
             else
-              echo "❌ HACS load check (more-info: https://hacs.xyz/docs/publish/include#check-hacs)" >> "${{ github.action_path }}/result"
+              echo "❌ HACS load check (more-info: https://hacs.xyz/docs/publish/include#check-hacs )" >> "${{ github.action_path }}/result"
               touch "${{ github.action_path }}/error"
             fi
             echo "::endgroup::"
