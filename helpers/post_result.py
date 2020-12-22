@@ -13,7 +13,7 @@ def get_token():
 
 def get_event():
     with open(os.getenv('GITHUB_EVENT_PATH'), "r") as event:
-        print(event.read())
+        return event.read()
 
 
 async def post():
