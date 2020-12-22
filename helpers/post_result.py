@@ -5,6 +5,7 @@ from aiogithubapi import GitHub
 from aiogithubapi.common.const import BASE_API_HEADERS, BASE_API_URL
 
 IDENTIFIER = "<!-- HACS action comment -->"
+HEADER = "🎉 HACS repository validator action summary 🎉"
 
 
 def get_token():
@@ -18,8 +19,8 @@ def get_event():
 
 
 def get_result():
-    with open(f"{os.getenv('GITHUB_ACTION_PATH')}/result", "r") as event:
-        return event.read().decode("UTF-8")
+    with open(f"{os.getenv('GITHUB_ACTION_PATH')}/result", "r") as result:
+        return result.read().decode("UTF-8")
 
 
 async def post():
@@ -30,7 +31,7 @@ async def post():
     async with GitHub(get_token()) as github:
         name = event["repository"]["full_name"]
         number = event["pull_request"]["number"]
-        msg = f"🎉 HACS repository validator action summary 🎉\n{get_result()}\n\n{IDENTIFIER}"
+        msg = f"{HEADER}\n{get_result()}\n\n{IDENTIFIER}"
 
         _headers = BASE_API_HEADERS
         _headers["Authorization"] = f"token {github.client.token}"
