@@ -24,6 +24,6 @@ function checkRun () {
   if [ "${wheels}" == 0 ]; then
     checkSuccess "Python wheels"
   else
-    checkNeutral "Python wheels"
+    checkError "Python wheels"
   fi
 }

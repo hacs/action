@@ -26,10 +26,10 @@ function checkRun () {
   set +e
   docker run homeassistant/home-assistant:beta
   requirements="$?"
-    set -e
+  set -e
   if [ "${requirements}" == 0 ]; then
     checkSuccess "Requirements validation"
   else
-    checkNeutral "Requirements validation"
+    checkError "Requirements validation"
   fi
 }

@@ -16,6 +16,6 @@ function checkRun () {
     echo "${images}"
     checkSuccess "Information file has images"
   else
-    checkNeutral "There should be images to show the user what they get"
+    checkError "There should be images to show the user what they get"
   fi
 }
