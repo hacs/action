@@ -38,7 +38,8 @@ async def post():
                 _endpoint = f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment['id']}"
                 break
 
-        await github.client.session.post(_endpoint, json={"body": msg}, headers=_headers)
+        result = await github.client.session.post(_endpoint, json={"body": msg}, headers=_headers)
+        print(result.__dict__)
 
 
 asyncio.get_event_loop().run_until_complete(post())
