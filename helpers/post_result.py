@@ -35,6 +35,7 @@ async def post():
         comments = await request.json()
         for comment in comments:
             if IDENTIFIER in comment["body"]:
+                print(comment)
                 _endpoint = f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment['id']}"
                 break
 
