@@ -3,6 +3,7 @@
 declare -a checks=(
   archived
   manifest
+  hacsjson
   description
   brands
   topics
