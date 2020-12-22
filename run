@@ -5,6 +5,8 @@ declare -a checks=(
   manifest
   description
   brands
+  topics
+  issues
 )
 
 for check in $({checks[@]}); do

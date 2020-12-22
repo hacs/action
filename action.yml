@@ -71,42 +71,6 @@ runs:
 
     - shell: bash
       run: |
-        data=$(jq .names[] -r "${{ github.action_path }}/data/topics") > /dev/null
-        if [[ ! "${{ inputs.ignore }}" =~ topics ]]; then
-          echo "::group::topics"
-          echo "https://hacs.xyz/docs/publish/include#check-repository"
-          if [ ! -z "${data}" ]; then
-            echo "${data}"
-            echo "✅ The repository has topics" >> "${{ github.action_path }}/result"
-          else
-            echo "❌ The repository is missing topics (more-info: https://hacs.xyz/docs/publish/include#check-repository )" >> "${{ github.action_path }}/result"
-            touch "${{ github.action_path }}/error"
-          fi
-          echo "::endgroup::"
-        else
-          echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
-        fi
-
-    - shell: bash
-      run: |
-        data=$(jq .has_issues -r "${{ github.action_path }}/data/info") > /dev/null
-        if [[ ! "${{ inputs.ignore }}" =~ issues ]]; then
-          echo "::group::issues"
-          echo "https://hacs.xyz/docs/publish/include#check-repository"
-          echo "https://github.com/${{ steps.init.outputs.repository }}/issues"
-          if [ "${data}" == "true" ]; then
-            echo "✅ The repository has issues enabled" >> "${{ github.action_path }}/result"
-          else
-            echo "❌ The repository has not issues enabled (more-info: https://hacs.xyz/docs/publish/include#check-repository )" >> "${{ github.action_path }}/result"
-            touch "${{ github.action_path }}/error"
-          fi
-          echo "::endgroup::"
-        else
-          echo "⚪ Skipped check: issues" >> "${{ github.action_path }}/result"
-        fi
-
-    - shell: bash
-      run: |
         moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-fork)"
         data=$(jq .fork -r "${{ github.action_path }}/data/info") > /dev/null
         if [[ "${{ github.repository }}" == "hacs/default" ]]; then
