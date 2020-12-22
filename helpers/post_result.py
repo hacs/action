@@ -37,7 +37,7 @@ async def post():
                 await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment.id}", data={"body": msg}, headers=BASE_API_HEADERS)
                 return
 
-        await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments", data={"body": msg}, headers={"Accept": "application/vnd.github.v3+json"})
+        await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments", data=json.dumps({"body": msg}), headers={"Accept": "application/vnd.github.v3+json"}, jsondata=False)
 
 
 asyncio.get_event_loop().run_until_complete(post())
