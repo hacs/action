@@ -1,0 +1,37 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-hacs"
+GROUP="hacs"
+
+function checkCondition () {
+  category=$(cat "$GITHUB_ACTION_PATH"/data/category)
+  if [ "$category" != "integration" ]; then
+    return 1
+  fi
+}
+
+function checkRun () {
+  cd "$GITHUB_ACTION_PATH/hacs/action"
+  cp "$GITHUB_ACTION_PATH/helpers/action.py" "./action.py"
+  docker build . -t hacs/action
+  set +e
+  docker run \
+    -e INPUT_GITHUB_TOKEN="$GITHUB_TOKEN" \
+    -e GITHUB_ACTOR="$GITHUB_ACTOR" \
+    -e GITHUB_ACTION \
+    -e GITHUB_WORKSPACE="$GITHUB_WORKSPACE" \
+    -e GITHUB_EVENT_PATH="$GITHUB_EVENT_PATH" \
+    -e GITHUB_REPOSITORY="$GITHUB_REPOSITORY" \
+    -e CHANGED_FILES="$CHANGED_FILES" \
+    -e REPOSITORY="$(cat "$GITHUB_ACTION_PATH"/data/repository)" \
+    -e CATEGORY="$(cat "$GITHUB_ACTION_PATH"/data/category)" \
+    -v "$GITHUB_EVENT_PATH":/github/event.json \
+    -v "$GITHUB_WORKSPACE":/github/workspace \
+    hacs/action
+  hacs=$?
+  set -e
+  if [ "${hacs}" == 0 ]; then
+    checkSuccess "HACS load check"
+  else
+    checkError "HACS load check"
+  fi
+}

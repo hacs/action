@@ -71,39 +71,4 @@ runs:
         bash "${{ github.action_path }}/run"
 
     - shell: bash
-      run: |
-        if [[ ! "${{ inputs.ignore }}" =~ hacs ]]; then
-          echo "::group::hacs"
-          echo "https://hacs.xyz/docs/publish/include#check-hacs"
-          cd "${{ github.action_path }}/hacs/action"
-          cp "${{ github.action_path }}/helpers/action.py" "./action.py"
-          docker build . -t hacs/action
-          set +e
-          docker run \
-            -e INPUT_GITHUB_TOKEN="${{ github.token }}" \
-            -e GITHUB_ACTOR="${{ github.actor }}" \
-            -e GITHUB_ACTION \
-            -e GITHUB_WORKSPACE="/github/workspace" \
-            -e GITHUB_EVENT_PATH="/github/event.json" \
-            -e GITHUB_REPOSITORY="${{ github.repository }}" \
-            -e CHANGED_FILES="$CHANGED_FILES" \
-            -e REPOSITORY="${{ steps.init.outputs.repository }}" \
-            -e CATEGORY="${{ steps.init.outputs.category }}" \
-            -v "${{ github.event_path }}":/github/event.json \
-            -v "${{ github.workspace }}":/github/workspace \
-            hacs/action
-            hacs=$?
-            set -e
-            if [ "${hacs}" == 0 ]; then
-                echo "✅ HACS load check" >> "${{ github.action_path }}/result"
-            else
-              echo "❌ HACS load check (more-info: https://hacs.xyz/docs/publish/include#check-hacs )" >> "${{ github.action_path }}/result"
-              touch "${{ github.action_path }}/error"
-            fi
-            echo "::endgroup::"
-        else
-          echo "⚪ Skipped check: hacs" >> "${{ github.action_path }}/result"
-        fi
-
-    - shell: bash
       run: bash "${{ github.action_path }}/helpers/wrapup" "${{ github.action_path }}"
