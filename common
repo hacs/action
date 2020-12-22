@@ -1,7 +1,12 @@
 #!/bin/bash
 
+EMOJI_CHECK="✅"
+EMOJI_RED_X="❌"
+EMOJI_WHITE_CIRCLE="⚪"
+
 function repoInfo () {
-  echo $(jq .$1 -r "$GITHUB_ACTION_PATH/data/info") > /dev/null
+  info=$(jq .$1 -r "$GITHUB_ACTION_PATH/data/info") > /dev/null
+  echo "$info"
 }
 
 function checkInit () {
@@ -14,17 +19,17 @@ function checkComplete () {
 }
 
 function checkSuccess () {
-  echo "✅ $1" >> "$GITHUB_ACTION_PATH/result"
+  echo "$EMOJI_CHECK $1" >> "$GITHUB_ACTION_PATH/result"
 }
 
 function checkNeutral () {
-  echo "⚪ $1 (more-info: $URL )" >> "$GITHUB_ACTION_PATH/result"
+  echo "$EMOJI_WHITE_CIRCLE $1 (more-info: $URL )" >> "$GITHUB_ACTION_PATH/result"
 }
 
 function checkError () {
   echo "::error::$1"
   msg="$1 (more-info: $URL )"
-  echo "❌ $msg" >> "$GITHUB_ACTION_PATH/result"
+  echo "$EMOJI_RED_X $msg" >> "$GITHUB_ACTION_PATH/result"
   touch "$GITHUB_ACTION_PATH/error"
 }
 
@@ -61,6 +66,6 @@ function checkExecute () {
       checkComplete
     fi
   else
-    echo "⚪ Ignored check: $GROUP" >> "$GITHUB_ACTION_PATH/result"
+    echo "$EMOJI_WHITE_CIRCLE Ignored check: $GROUP" >> "$GITHUB_ACTION_PATH/result"
   fi
 }
