@@ -25,7 +25,7 @@ function checkRun () {
   requirements=$?
   set -e
   if [ "${requirements}" == 0 ]; then
-      checkSuccess "TRequirements validation"
+      checkSuccess "Requirements validation"
   else
     checkNeutral "Requirements validation"
   fi

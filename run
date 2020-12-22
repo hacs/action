@@ -11,7 +11,8 @@ declare -a checks=(
   day
   fork
   information
-  requirements
+  #requirements
+  images
 )
 
 for check in ${checks[@]}; do

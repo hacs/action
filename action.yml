@@ -72,26 +72,6 @@ runs:
 
     - shell: bash
       run: |
-        if [ "plugin" == ${{ inputs.category }} ] || [ "theme" == ${{ inputs.category }} ]; then
-          if [[ ! "${{ inputs.ignore }}" =~ images ]]; then
-            echo "::group::images"
-            echo "https://hacs.xyz/docs/publish/include#check-images"
-            images=$(python3 ${{ github.action_path }}/helpers/findimages.py "${{ steps.information.outputs.path }}")
-            if [ ! -z "${images}" ]; then
-              echo "${images}"
-              echo "✅ Information file has images" >> "${{ github.action_path }}/result"
-            else
-              echo "❌ There should be images to show the user what they get." >> "${{ github.action_path }}/result"
-              touch "${{ github.action_path }}/error"
-            fi
-            echo "::endgroup::"
-          else
-            echo "⚪ Skipped check: images" >> "${{ github.action_path }}/result"
-          fi
-        fi
-
-    - shell: bash
-      run: |
         if [ "${{ inputs.category }}" == "integration" ]; then
           if [[ ! "${{ inputs.ignore }}" =~ wheels ]]; then
             requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r '. | select(.requirements != null) | .requirements[]') > /dev/null
