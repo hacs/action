@@ -2,6 +2,7 @@ import asyncio
 import os
 import json
 from aiogithubapi import GitHub
+from aiogithubapi.helpers import async_call_api
 
 IDENTIFIER = "<!-- HACS action comment -->"
 
@@ -38,7 +39,7 @@ async def post():
                 await comment.update(msg)
                 return
 
-        await pull.comment(msg)
+        await async_call_api(github.client.session, "POST", f"/repos/{name}/issues/{number}/comments", data={"body": msg})
 
 
 asyncio.get_event_loop().run_until_complete(post())
