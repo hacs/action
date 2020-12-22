@@ -25,7 +25,7 @@ async def post():
     async with GitHub(get_token()) as github:
         name = event["repository"]["full_name"]
         number = event["pull_request"]["number"]
-        msg = f"Hey!\\n\\n{IDENTIFIER}"
+        msg = f"Hey!\n\n{IDENTIFIER}"
 
         _headers = BASE_API_HEADERS
         _headers["Authorization"] = f"token {github.client.token}"
@@ -39,7 +39,7 @@ async def post():
                 break
 
         result = await github.client.session.post(_endpoint, json={"body": msg}, headers=_headers)
-        if result.status != 200:
+        if result.status != 201:
             print(result.reason)
             exit(1)
 
