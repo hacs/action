@@ -25,24 +25,26 @@ async def post():
         return
 
     async with GitHub(get_token()) as github:
-        _headers = BASE_API_HEADERS
-        _headers["Authorization"] = f"token {github.client.token}"
-
         name = event["repository"]["full_name"]
         number = event["pull_request"]["number"]
         msg = f"Hey!\\n\\n{IDENTIFIER}"
-        repository = await github.get_repo(name)
-        pull = await repository.get_issue(number)
-        pull.attributes["id"] = number
-        comments = await pull.get_comments()
-        for comment in comments:
-            if IDENTIFIER in comment.body:
-                await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment.id}", data={"body": msg}, headers=BASE_API_HEADERS)
-                return
 
-        # await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments", data=json.dumps({"body": msg}), headers={"Accept": "application/vnd.github.v3+json"})
+        _headers = BASE_API_HEADERS
+        _headers["Authorization"] = f"token {github.client.token}"
+        _endpoint = f"{BASE_API_URL}/repos/{name}/issues/{number}/comments"
+
+        comments = await github.client.session.get(
+            _endpoint,
+            headers=_headers
+        )
+
+        for comment in comments.data:
+            if IDENTIFIER in comment["body"]:
+                _endpoint = f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment['id']}"
+                break
+
         await github.client.session.post(
-            f"{BASE_API_URL}/repos/{name}/issues/{number}/comments",
+            _endpoint,
             json={"body": msg},
             headers=_headers
         )
