@@ -67,11 +67,7 @@ runs:
 
     - shell: bash
       run: |
-        for check in $(find "${{ github.action_path }}/checks/" -type f ); do
-          source "${{ github.action_path }}/common"
-          source "$check"
-          checkExecute
-        done
+        bash "${{ github.action_path }}/run"
 
     - shell: bash
       run: |

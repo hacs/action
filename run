@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for check in $(find "$GITHUB_ACTION_PATH/checks/" -type f ); do
+  source "$GITHUB_ACTION_PATH/common"
+  source "$check"
+  checkExecute
+done
