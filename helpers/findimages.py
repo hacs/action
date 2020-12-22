@@ -1,8 +1,8 @@
 import os
 
-ignored=[
+ignored = [
     "-shield",
-    "img.shields.io"
+    "img.shields.io",
     "buymeacoffee.com"
 ]
 
