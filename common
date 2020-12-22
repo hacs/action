@@ -57,10 +57,8 @@ function checkIgnored () {
 }
 
 function checkExecute () {
-  checkIgnored
-  if "$?";then
-    checkCondition
-    if "$?";then
+  if checkIgnored ;then
+    if checkCondition ;then
       checkInit
       checkRun
       checkComplete

@@ -8,7 +8,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: ShellCheck
+    name: Lint
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
