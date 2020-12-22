@@ -26,7 +26,7 @@ async def post():
 
     async with GitHub(get_token()) as github:
         _headers = BASE_API_HEADERS
-        _headers["Authorization"] = f"token {get_token()}"
+        _headers["Authorization"] = f"token {github.client.token}"
 
         name = event["repository"]["full_name"]
         number = event["pull_request"]["number"]
@@ -41,7 +41,7 @@ async def post():
                 return
 
         # await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments", data=json.dumps({"body": msg}), headers={"Accept": "application/vnd.github.v3+json"})
-        await github.session.post(
+        await github.client.session.post(
             f"{BASE_API_URL}/repos/{name}/issues/{number}/comments",
             data=json.dumps({{"body": msg}}),
             headers=_headers
