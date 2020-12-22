@@ -33,21 +33,14 @@ async def post():
         _headers["Authorization"] = f"token {github.client.token}"
         _endpoint = f"{BASE_API_URL}/repos/{name}/issues/{number}/comments"
 
-        comments = await github.client.session.get(
-            _endpoint,
-            headers=_headers
-        )
-
+        request = await github.client.session.get(_endpoint, headers=_headers)
+        comments = await request.json()
         for comment in comments.data:
             if IDENTIFIER in comment["body"]:
                 _endpoint = f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment['id']}"
                 break
 
-        await github.client.session.post(
-            _endpoint,
-            json={"body": msg},
-            headers=_headers
-        )
+        await github.client.session.post(_endpoint, json={"body": msg}, headers=_headers)
 
 
 asyncio.get_event_loop().run_until_complete(post())
