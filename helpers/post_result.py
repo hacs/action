@@ -36,7 +36,7 @@ async def post():
                 comment_id = comment.id
 
         if comment_id is None:
-            await pull.comment(f"Hey!\n\n{IDENTIFIER}")
+            await pull.comment("Hey!\\n\\n{IDENTIFIER}")
 
 
 asyncio.get_event_loop().run_until_complete(post())
