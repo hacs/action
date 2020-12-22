@@ -65,6 +65,7 @@ runs:
         echo "$category" > "${{ github.action_path }}/data/category"
         echo "$path" > "${{ github.action_path }}/data/path"
         echo "${{ inputs.ignore }}" > "${{ github.action_path }}/data/ignore"
+        echo "${{ github.token }}" > "${{ github.action_path }}/data/token"
 
     - shell: bash
       run: |
