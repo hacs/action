@@ -72,34 +72,6 @@ runs:
 
     - shell: bash
       run: |
-        if [ "${{ inputs.category }}" == "integration" ]; then
-          if [[ ! "${{ inputs.ignore }}" =~ wheels ]]; then
-            requirements=$(cat "${{ steps.manifest.outputs.path }}" | jq -r '. | select(.requirements != null) | .requirements[]') > /dev/null
-            if [ ! -z "$requirements" ]; then
-              echo "::group::wheels"
-              echo "https://hacs.xyz/docs/publish/include#check-wheels"
-              domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
-              set +e
-              wheelsurl="https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/components/$domain.json"
-              curl -sSLf "$wheelsurl" > /dev/null
-              wheels=$?
-              set -e
-              if [ "${wheels}" == 0 ]; then
-                  echo "${wheelsurl}"
-                  echo "✅ Python wheels" >> "${{ github.action_path }}/result"
-              else
-                echo "❌ Python wheels (more-info: https://hacs.xyz/docs/publish/include#check-wheels" >> "${{ github.action_path }}/result"
-                touch "${{ github.action_path }}/error"
-              fi
-              echo "::endgroup::"
-            fi
-          else
-            echo "⚪ Skipped check: wheels" >> "${{ github.action_path }}/result"
-          fi
-        fi
-
-    - shell: bash
-      run: |
         if [[ ! "${{ inputs.ignore }}" =~ hacs ]]; then
           echo "::group::hacs"
           echo "https://hacs.xyz/docs/publish/include#check-hacs"

@@ -1,0 +1,26 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-wheels"
+GROUP="wheels"
+
+function checkCondition () {
+  category=$(cat "$GITHUB_ACTION_PATH"/data/category)
+  requirements=$(jq -r '. | select(.requirements != null) | .requirements[]' "$GITHUB_ACTION_PATH/data/manifest.json") > /dev/null
+  if [ "$category" != "integration" ] || [ -z "$requirements" ]; then
+    return 1
+  fi
+}
+
+
+function checkRun () {
+  domain=$(jq .domain -r "$GITHUB_ACTION_PATH/data/manifest.json")
+  set +e
+  wheelsurl="https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/components/$domain.json"
+  curl -sSLf "$wheelsurl" > /dev/null
+  wheels=$?
+  set -e
+  if [ "${wheels}" == 0 ]; then
+    checkSuccess "Python wheels"
+  else
+    checkNeutral "Python wheels"
+  fi
+}

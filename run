@@ -13,6 +13,7 @@ declare -a checks=(
   information
   #requirements
   images
+  wheels
 )
 
 for check in ${checks[@]}; do
