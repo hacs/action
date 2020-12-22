@@ -44,16 +44,18 @@ async def post():
                 _endpoint = f"{BASE_API_URL}/repos/{name}/issues/comments/{comment['id']}"
                 result = await github.client.session.patch(_endpoint, json={"body": msg}, headers=_headers)
                 if result.status != 200:
-                    print(_endpoint)
-                    print(result.reason)
-                    exit(1)
+                    if result.reason != "Forbidden":
+                        print(_endpoint)
+                        print(result.reason)
+                        exit(1)
                 return
 
         result = await github.client.session.post(_endpoint, json={"body": msg}, headers=_headers)
         if result.status != 201:
-            print(_endpoint)
-            print(result.reason)
-            exit(1)
+            if result.reason != "Forbidden":
+                print(_endpoint)
+                print(result.reason)
+                exit(1)
 
 
 asyncio.get_event_loop().run_until_complete(post())
