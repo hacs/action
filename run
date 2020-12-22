@@ -4,6 +4,7 @@ declare -a checks=(
   archived
   manifest
   description
+  brands
 )
 
 for check in ${checks[@]}; do
