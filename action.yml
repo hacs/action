@@ -61,6 +61,7 @@ runs:
         echo "::set-output name=path::$path"
 
         echo "$repository" > "${{ github.action_path }}/data/repository"
+        echo "${{ github.repository }}" > "${{ github.action_path }}/data/action_repository"
         echo "$category" > "${{ github.action_path }}/data/category"
         echo "$path" > "${{ github.action_path }}/data/path"
         echo "${{ inputs.ignore }}" > "${{ github.action_path }}/data/ignore"
@@ -68,21 +69,6 @@ runs:
     - shell: bash
       run: |
         bash "${{ github.action_path }}/run"
-
-    - shell: bash
-      run: |
-        moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-fork)"
-        data=$(jq .fork -r "${{ github.action_path }}/data/info") > /dev/null
-        if [[ "${{ github.repository }}" == "hacs/default" ]]; then
-          echo "::group::fork"
-          echo "https://hacs.xyz/docs/publish/include#check-fork"
-          if [ "${data}" == "false" ]; then
-            echo "✅ The repository is not a fork" >> "${{ github.action_path }}/result"
-          else
-            echo "⚪ The repository is a fork (more-info: https://hacs.xyz/docs/publish/include#check-fork )" >> "${{ github.action_path }}/result"
-          fi
-          echo "::endgroup::"
-        fi
 
     - shell: bash
       id: hacsjson

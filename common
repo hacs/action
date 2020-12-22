@@ -1,5 +1,9 @@
 #!/bin/bash
 
+function repoInfo () {
+  return $(jq .$1 -r "$GITHUB_ACTION_PATH/data/info") > /dev/null
+}
+
 function checkInit () {
   echo "::group::$GROUP"
   echo "More info: $URL"
@@ -11,6 +15,10 @@ function checkComplete () {
 
 function checkSuccess () {
   echo "✅ $1" >> "$GITHUB_ACTION_PATH/result"
+}
+
+function checkNeutral () {
+  echo "⚪ $1 (more-info: $URL )" >> "$GITHUB_ACTION_PATH/result"
 }
 
 function checkError () {

@@ -3,7 +3,7 @@ URL="https://hacs.xyz/docs/publish/include#check-archived"
 GROUP="archived"
 
 function checkRun () {
-  data=$(jq .archived -r "$GITHUB_ACTION_PATH/data/info") > /dev/null
+  data=$(repoInfo archived)
   if [ "${data}" == "false" ]; then
     checkSuccess "The repository is not archived"
   else

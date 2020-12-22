@@ -8,6 +8,7 @@ declare -a checks=(
   topics
   issues
   day
+  fork
 )
 
 for check in ${checks[@]}; do

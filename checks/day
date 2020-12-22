@@ -1,5 +1,5 @@
 #!/bin/bash
-URL=""
+URL=$(date +%A)
 GROUP="day"
 
 function checkRun () {

@@ -3,7 +3,7 @@ URL="https://hacs.xyz/docs/publish/include#check-repository"
 GROUP="description"
 
 function checkRun () {
-  data=$(jq .description -r "$GITHUB_ACTION_PATH/data/info") > /dev/null
+  data=$(repoInfo description)
   if [ ! -z "${data}" ] && [ "${data}" != "null" ]; then
     echo "${data}"
     checkSuccess "The repository has a description"
