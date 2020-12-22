@@ -111,10 +111,6 @@ runs:
         fi
 
     - shell: bash
-      run: |
-        echo "✅ This day ends with an 'y' ($(date +%A))" >> "${{ github.action_path }}/result"
-
-    - shell: bash
       id: information
       run: |
         if [[ ! "${{ inputs.ignore }}" =~ information ]]; then
