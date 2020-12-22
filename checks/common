@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function checkInit () {
-  echo "::group::$1"
-  echo "$2"
+  echo "::group::$GROUP"
+  echo "More info: $URL"
 }
 
 function checkComplete () {
@@ -15,6 +15,7 @@ function checkSuccess () {
 
 function checkError () {
   msg="$1"
+  echo "::error::$msg"
   if [ ! -z "$2" ]; then
     msg+=" (more-info: $2 )"
   fi
@@ -22,7 +23,41 @@ function checkError () {
   touch "$GITHUB_ACTION_PATH/error"
 }
 
+function checkWarning () {
+  echo "::warning::$1"
+}
 
 function setOutput () {
   echo "::set-output name=$1::$2"
+}
+
+function checkRun () {
+  echo "No checkRun function for $GROUP"
+}
+
+function checkCondition () {
+  return 0
+}
+
+function checkIgnored () {
+  ignore=$(cat "$GITHUB_ACTION_PATH/data/ignore")
+  if [[ "$ignore" =~ "$GROUP" ]]; then
+    return 1
+  fi
+}
+
+function checkExecute () {
+  checkIgnored
+  if [ "$?" == 0 ];then
+    checkCondition
+    if [ "$?" == 0 ];then
+      checkInit
+      checkRun
+      checkComplete
+    else
+      echo "⚪ Skipped check: $GROUP" >> "$GITHUB_ACTION_PATH/result"
+    fi
+  else
+    echo "⚪ Ignored check: $GROUP" >> "$GITHUB_ACTION_PATH/result"
+  fi
 }

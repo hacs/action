@@ -2,6 +2,9 @@
 {
     "name": "hacs/action",
     "image": "ludeeus/container:python",
+    "containerEnv": {
+      "GITHUB_ACTION_PATH": "./"
+    },
     "context": "..",
     "extensions": [
       "github.vscode-pull-request-github",

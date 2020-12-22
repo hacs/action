@@ -1,26 +1,33 @@
 #!/bin/bash
-source "$GITHUB_ACTION_PATH/checks/common"
+URL="https://hacs.xyz/docs/publish/include#check-test"
+GROUP="test"
 
-URL="https://hacs.xyz/docs/publish/include#check-manifest"
-GROUP="manifest"
+declare -a requiredKeys=(
+  issue_tracker
+  domain
+  documentation
+  codeowners
+)
+
+function checkCondition () {
+  category=$(cat "$GITHUB_ACTION_PATH"/data/category)
+  if [ "$category" != "integration" ]; then
+    return 1
+  fi
+}
 
 function checkRun () {
-  manifest=$(find "$1" -name manifest.json)
+  manifest=$(find "$(cat $GITHUB_ACTION_PATH/data/path)" -name manifest.json)
   if [ ! -f "$manifest" ]; then
     checkError "manifest.json file not found" $URL
     exit 1
   else
-    setOutput "path" "$manifest"
     cat "$manifest" | jq .
-    for key in "issue_tracker domain documentation codeowners"; do
-      if [ -z "$(jq --arg entry "$key" '.[$entry]' -r "$manifest")" ]; then
-        checkError "manifest.json file missing key $key $moreinfo" $URL
+    for key in ${requiredKeys[@]}; do
+      if [ "$(jq --arg entry $key '.[$entry]' -r "$manifest")" == "null" ]; then
+        checkError "manifest.json file missing key $key" $URL
         exit 1
       fi
     done
   fi
 }
-
-checkInit "$GROUP" "$URL"
-checkRun $*
-checkComplete

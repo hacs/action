@@ -1,0 +1,12 @@
+#!/bin/bash
+
+declare -a checks=(
+  manifest
+  .template
+)
+
+for check in ${checks[@]}; do
+  source "$GITHUB_ACTION_PATH/checks/common"
+  source "$GITHUB_ACTION_PATH/checks/$check"
+  checkExecute
+done
