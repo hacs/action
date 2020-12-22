@@ -17,6 +17,11 @@ def get_event():
         return event.read()
 
 
+def get_result():
+    with open(f"{os.getenv('GITHUB_ACTION_PATH')}/result", "r") as event:
+        return event.read()
+
+
 async def post():
     event = json.loads(get_event())
     if not event.get('pull_request'):
@@ -25,7 +30,7 @@ async def post():
     async with GitHub(get_token()) as github:
         name = event["repository"]["full_name"]
         number = event["pull_request"]["number"]
-        msg = f"Hey!\n\n{IDENTIFIER}"
+        msg = f"{get_result()}\n\n{IDENTIFIER}"
 
         _headers = BASE_API_HEADERS
         _headers["Authorization"] = f"token {github.client.token}"
