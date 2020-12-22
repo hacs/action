@@ -35,7 +35,7 @@ async def post():
         comments = await request.json()
         for comment in comments:
             if IDENTIFIER in comment["body"] and comment["user"]["login"] == 'github-actions[bot]':
-                _endpoint = f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment['id']}"
+                _endpoint = f"{BASE_API_URL}/repos/{name}/issues/comments/{comment['id']}"
                 result = await github.client.session.patch(_endpoint, json={"body": msg}, headers=_headers)
                 if result.status != 200:
                     print(_endpoint)
