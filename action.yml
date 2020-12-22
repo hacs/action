@@ -71,32 +71,6 @@ runs:
         bash "${{ github.action_path }}/run"
 
     - shell: bash
-      id: hacsjson
-      run: |
-        moreinfo="(more-info: https://hacs.xyz/docs/publish/include#check-hacs-manifest)"
-        if [[ ! "${{ inputs.ignore }}" =~ hacsjson ]]; then
-          echo "::group::hacsjson"
-          echo "https://hacs.xyz/docs/publish/include#check-hacs-manifest"
-          if [ ! -f "${{ steps.init.outputs.path }}/hacs.json" ]; then
-            echo "❌ hacs.json file not found in the root of the repository $moreinfo" >> "${{ github.action_path }}/result"
-            touch "${{ github.action_path }}/error"
-          else
-            cat "${{ steps.init.outputs.path }}/hacs.json" | jq .
-            echo "::set-output name=path::"${{ steps.init.outputs.path }}/hacs.json""
-            name=$(jq .name "${{ steps.init.outputs.path }}/hacs.json")
-            if [ ! -z "${name}" ]; then
-              echo "✅ hacs.json has the 'name' key set" >> "${{ github.action_path }}/result"
-            else
-              echo "❌ Missing 'name' from hacs.json (more-info: https://hacs.xyz/docs/publish/include#check-hacs-manifest )" >> "${{ github.action_path }}/result"
-              touch "${{ github.action_path }}/error"
-            fi
-          fi
-          echo "::endgroup::"
-        else
-          echo "⚪ Skipped check: hacsjson" >> "${{ github.action_path }}/result"
-        fi
-
-    - shell: bash
       id: information
       run: |
         if [[ ! "${{ inputs.ignore }}" =~ information ]]; then

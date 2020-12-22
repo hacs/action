@@ -1,0 +1,18 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-hacs-manifest"
+GROUP="hacsjson"
+
+function checkRun () {
+  repoPath=$(cat "$GITHUB_ACTION_PATH"/data/path)
+  if [ ! -f "$repoPath/hacs.json" ]; then
+    checkError "hacs.json file not found in the root of the repository"
+  else
+    jq . "$repoPath/hacs.json" > "$GITHUB_ACTION_PATH/data/hacs.json"
+    name=$(jq .name "$GITHUB_ACTION_PATH/data/hacs.json")
+    if [ ! -z "${name}" ]; then
+      checkSuccess "hacs.json has the 'name' key set"
+    else
+      checkError "Missing 'name' from hacs.json"
+    fi
+  fi
+}
