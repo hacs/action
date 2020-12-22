@@ -14,6 +14,10 @@ inputs:
   repository:
     description: "The full name of repository"
     required: false
+  comment:
+    description: "Post a comment to the PR with the result of the checks"
+    required: false
+    default: "true"
 runs:
   using: "composite"
   steps:
@@ -73,6 +77,15 @@ runs:
 
     - shell: bash
       run: bash "${{ github.action_path }}/helpers/wrapup" "${{ github.action_path }}"
+
+    - shell: bash
+      id: comment
+      run: |
+        if [ "${{ inputs.comment }}" == "true" ]; then
+          python3 -m pip install -U wheel setuptools > /dev/null
+          python3 -m pip install -U aiogithubapi > /dev/null
+          python3 helpers/post_result.py
+        fi
 
     - shell: bash
       run: |

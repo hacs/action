@@ -55,6 +55,7 @@ jobs:
         uses: ./
         with:
           category: theme
+          comment: false
           repository: ${{ matrix.repository }}
 
   plugin:
@@ -75,6 +76,7 @@ jobs:
         with:
           category: plugin
           ignore: images
+          comment: false
           repository: ${{ matrix.repository }}
 
   netdaemon:
@@ -95,6 +97,7 @@ jobs:
         with:
           category: netdaemon
           ignore: topics
+          comment: false
           repository: ${{ matrix.repository }}
 
   appdaemon:
@@ -114,6 +117,7 @@ jobs:
         with:
           category: appdaemon
           ignore: hacsjson
+          comment: false
           repository: ${{ matrix.repository }}
 
   python_script:
@@ -133,4 +137,5 @@ jobs:
         with:
           category: python_scripts
           ignore: hacsjson information
+          comment: false
           repository: ${{ matrix.repository }}
