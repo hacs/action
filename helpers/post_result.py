@@ -29,13 +29,16 @@ async def post():
         print(name)
         print(number)
         print(msg)
-        comments = await github.client.get(endpoint=f"/repos/{name}/issues/{number}/comments")
+        repository = await github.get_repo(name)
+        pull = await repository.get_issue(number)
+        pull.attributes["id"] = number
+        comments = await pull.get_comments()
         for comment in comments:
             if IDENTIFIER in comment.body:
-                await github.client.post(endpoint=f"/repos/{name}/issues/{number}/comments/{comment.id}", data={"body": msg}, jsondata=True)
+                await comment.update(msg)
                 return
 
-        await github.client.post(endpoint=f"/repos/{name}/issues/{number}/comments", data={"body": msg}, jsondata=True)
+        await pull.comment(msg)
 
 
 asyncio.get_event_loop().run_until_complete(post())
