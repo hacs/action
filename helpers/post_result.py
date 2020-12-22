@@ -25,6 +25,9 @@ async def post():
         return
 
     async with GitHub(get_token()) as github:
+        _headers = BASE_API_HEADERS
+        _headers["Authorization"] = f"token {get_token()}"
+
         name = event["repository"]["full_name"]
         number = event["pull_request"]["number"]
         msg = f"Hey!\\n\\n{IDENTIFIER}"
@@ -37,7 +40,12 @@ async def post():
                 await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment.id}", data={"body": msg}, headers=BASE_API_HEADERS)
                 return
 
-        await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments", data=json.dumps({"body": msg}), headers={"Accept": "application/vnd.github.v3+json"})
+        # await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments", data=json.dumps({"body": msg}), headers={"Accept": "application/vnd.github.v3+json"})
+        await github.session.post(
+            f"{BASE_API_URL}/repos/{name}/issues/{number}/comments",
+            data=json.dumps({{"body": msg}}),
+            headers=_headers
+        )
 
 
 asyncio.get_event_loop().run_until_complete(post())
