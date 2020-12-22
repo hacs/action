@@ -73,9 +73,9 @@ runs:
 
     - shell: bash
       run: |
-        if [ "${{ inputs.post }}" == "true" ] || [ "${{ inputs.post }}" == "True" ]; then
-          python3 -m pip install -U wheel setuptools
-          python3 -m pip install -U aiogithubapi
+        if [ "${{ inputs.post }}" == "true" ]; then
+          python3 -m pip install -U wheel setuptools > /dev/null
+          python3 -m pip install -U aiogithubapi > /dev/null
           python3 helpers/post_result.py
         fi
 
