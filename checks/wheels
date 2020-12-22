@@ -4,12 +4,13 @@ GROUP="wheels"
 
 function checkCondition () {
   category=$(cat "$GITHUB_ACTION_PATH"/data/category)
-  if [ "$category" != "integration" ]; then
+  if [ "$category" == "integration" ]; then
     requirements=$(jq -r '. | select(.requirements != null) | .requirements[]' "$GITHUB_ACTION_PATH/data/manifest.json") > /dev/null
-    if [ -z "$requirements" ]; then
-      return 1
+    if [ ! -z "$requirements" ]; then
+      return 0
     fi
   fi
+  return 1
 }
 
 

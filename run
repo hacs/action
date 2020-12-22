@@ -11,7 +11,7 @@ declare -a checks=(
   day
   fork
   information
-  #requirements
+  requirements
   images
   wheels
   hacs
