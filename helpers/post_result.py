@@ -23,20 +23,21 @@ async def post():
         return
 
     async with GitHub(get_token()) as github:
-        comment_id = None
         name = event["repository"]["full_name"]
         number = event["pull_request"]["number"]
+        msg = f"Hey!\\n\\n{IDENTIFIER}"
         print(name)
         print(number)
+        print(msg)
         repository = await github.get_repo(name)
         pull = await repository.get_issue(number)
         comments = await pull.get_comments()
         for comment in comments:
             if IDENTIFIER in comment.body:
-                comment_id = comment.id
+                await comment.update(msg)
+                return
 
-        if comment_id is None:
-            await pull.comment("Hey!\\n\\n{IDENTIFIER}")
+        await pull.comment(msg)
 
 
 asyncio.get_event_loop().run_until_complete(post())
