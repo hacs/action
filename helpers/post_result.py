@@ -20,7 +20,7 @@ def get_event():
 
 def get_result():
     with open(f"{os.getenv('GITHUB_ACTION_PATH')}/result", "r") as result:
-        return result.read().replace("white_check_mark", "heavy_check_mark")
+        return result.read()
 
 
 async def post():
