@@ -76,9 +76,6 @@ runs:
         bash "${{ github.action_path }}/run"
 
     - shell: bash
-      run: bash "${{ github.action_path }}/helpers/wrapup" "${{ github.action_path }}"
-
-    - shell: bash
       id: comment
       run: |
         if [ "${{ inputs.comment }}" == "true" ]; then
@@ -86,6 +83,9 @@ runs:
           python3 -m pip install -U aiogithubapi > /dev/null
           python3 helpers/post_result.py
         fi
+
+    - shell: bash
+      run: bash "${{ github.action_path }}/helpers/wrapup" "${{ github.action_path }}"
 
     - shell: bash
       run: |
