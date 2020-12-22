@@ -8,7 +8,7 @@ _Repository validation action for HACS_
 | -------- | ---------------------------------------------------------------------------------------- |
 | ignore   | A space seperated list of ignored checks                                                 |
 | category | The type of repository (integration, plugin, theme, netdaemon, appdaemon, python_script) |
-| post     | Post the results of the cheks to the PR (true, false)                                    |
+| comment  | Post the results of the cheks to the PR (true, false)                                    |
 
 ## Example
 
