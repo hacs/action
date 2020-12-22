@@ -6,7 +6,7 @@ declare -a checks=(
 )
 
 for check in ${checks[@]}; do
-  source "$GITHUB_ACTION_PATH/checks/common"
+  source "$GITHUB_ACTION_PATH/common"
   source "$GITHUB_ACTION_PATH/checks/$check"
   checkExecute
 done

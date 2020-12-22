@@ -1,6 +1,4 @@
 #!/bin/bash
-source "$GITHUB_ACTION_PATH/checks/common"
-
 URL="https://hacs.xyz/docs/publish/include#check-template"
 GROUP="template"
 

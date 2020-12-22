@@ -1,6 +1,6 @@
 #!/bin/bash
-URL="https://hacs.xyz/docs/publish/include#check-test"
-GROUP="test"
+URL="https://hacs.xyz/docs/publish/include#check-manifest"
+GROUP="manifest"
 
 declare -a requiredKeys=(
   issue_tracker
