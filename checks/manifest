@@ -24,13 +24,17 @@ function checkRun () {
     exit 1
   else
     checkSuccess "manifest.json file exist"
+    missingKeys="no"
     jq . "$manifest" > "$GITHUB_ACTION_PATH/data/manifest.json"
     jq . "$GITHUB_ACTION_PATH/data/manifest.json"
     for key in "${requiredKeys[@]}"; do
       if [ "$(jq --arg entry "$key" '.[$entry]' -r "$manifest")" == "null" ]; then
-        checkError "manifest.json file missing key $key"
+        checkError "manifest.json file missing key '$key'"
+        missingKeys="yes"
       fi
     done
-    checkSuccess "All required keys are present in manifest.json"
+    if [ "$missingKeys" == "no" ]; then
+      checkSuccess "All required keys are present in manifest.json"
+    fi
   fi
 }
