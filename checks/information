@@ -2,16 +2,13 @@
 URL="https://hacs.xyz/docs/publish/include#check-info"
 GROUP="information"
 
-declare -a readmePaths=(
+declare -a paths=(
   "README.md"
   "readme.md"
   "README.MD"
   "readme.MD"
   "readme"
   "README"
-)
-
-declare -a infoPaths=(
   "INFO.md"
   "info.md"
   "INFO.MD"
@@ -24,20 +21,25 @@ function checkRun () {
   repoPath=$(cat "$GITHUB_ACTION_PATH"/data/path)
   render_readme=$(jq .render_readme -r "$repoPath/hacs.json")
 
-  for path in ${readmePaths[@]}; do
+  for path in ${paths[@]}; do
     if [ ! -f "$GITHUB_ACTION_PATH/data/readme.md" ]; then
-      if [ -f "$repoPath/$path" ] && [ "$render_readme" == "true" ]; then
-        checkSuccess "$path exists"
-        cp "$repoPath/$path" "$GITHUB_ACTION_PATH/data/readme.md"
+      if [ -f "$repoPath/$path" ]; then
+        if [[ "$path" =~ "readme" ]] || [[ "$path" =~ "README" ]]; then
+          if [ "$render_readme" == "true" ]; then
+            checkSuccess "$path exists"
+            cp "$repoPath/$path" "$GITHUB_ACTION_PATH/data/readme.md"
+          fi
+        else
+          checkSuccess "$path exists"
+          cp "$repoPath/$path" "$GITHUB_ACTION_PATH/data/readme.md"
+        fi
       fi
     fi
   done
 
-  for path in ${infoPaths[@]}; do
-    if [ ! -f "$GITHUB_ACTION_PATH/data/readme.md" ]; then
-      if [ -f "$repoPath/$path" ]; then
-        cp "$repoPath/$path" "$GITHUB_ACTION_PATH/data/readme.md"
-      fi
-    fi
-  done
+  if [ ! -f "$GITHUB_ACTION_PATH/data/readme.md" ]; then
+    checkError "Missing information file"
+  else
+    cat "$GITHUB_ACTION_PATH/data/readme.md"
+  fi
 }
