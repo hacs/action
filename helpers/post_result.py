@@ -43,7 +43,7 @@ async def post():
         # await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments", data=json.dumps({"body": msg}), headers={"Accept": "application/vnd.github.v3+json"})
         await github.client.session.post(
             f"{BASE_API_URL}/repos/{name}/issues/{number}/comments",
-            data=json.dumps({{"body": msg}}),
+            json={{"body": msg}},
             headers=_headers
         )
 
