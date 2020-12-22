@@ -19,7 +19,7 @@ function checkComplete () {
 }
 
 function checkSuccess () {
-  echo "$EMOJI_RED_X $1" >> "$GITHUB_ACTION_PATH/result"
+  echo "$EMOJI_WHITE_CIRCLE $1" >> "$GITHUB_ACTION_PATH/result"
 }
 
 function checkNeutral () {
