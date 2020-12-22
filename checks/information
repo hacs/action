@@ -1,0 +1,43 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-info"
+GROUP="information"
+
+declare -a readmePaths=(
+  "README.md"
+  "readme.md"
+  "README.MD"
+  "readme.MD"
+  "readme"
+  "README"
+)
+
+declare -a infoPaths=(
+  "INFO.md"
+  "info.md"
+  "INFO.MD"
+  "info.MD"
+  "info"
+  "INFO"
+)
+
+function checkRun () {
+  repoPath=$(cat "$GITHUB_ACTION_PATH"/data/path)
+  render_readme=$(jq .render_readme -r "$repoPath/hacs.json")
+
+  for path in ${readmePaths[@]}; do
+    if [ ! -f "$GITHUB_ACTION_PATH/data/readme.md" ]; then
+      if [ -f "$repoPath/$path" ] && [ "$render_readme" == "true" ]; then
+        checkSuccess "$path exists"
+        cp "$repoPath/$path" "$GITHUB_ACTION_PATH/data/readme.md"
+      fi
+    fi
+  done
+
+  for path in ${infoPaths[@]}; do
+    if [ ! -f "$GITHUB_ACTION_PATH/data/readme.md" ]; then
+      if [ -f "$repoPath/$path" ]; then
+        cp "$repoPath/$path" "$GITHUB_ACTION_PATH/data/readme.md"
+      fi
+    fi
+  done
+}

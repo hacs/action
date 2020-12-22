@@ -8,6 +8,7 @@ function checkRun () {
     checkError "hacs.json file not found in the root of the repository"
   else
     jq . "$repoPath/hacs.json" > "$GITHUB_ACTION_PATH/data/hacs.json"
+    jq . "$GITHUB_ACTION_PATH/data/hacs.json"
     name=$(jq .name "$GITHUB_ACTION_PATH/data/hacs.json")
     if [ ! -z "${name}" ]; then
       checkSuccess "hacs.json has the 'name' key set"
