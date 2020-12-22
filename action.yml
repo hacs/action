@@ -14,6 +14,10 @@ inputs:
   repository:
     description: "The full name of repository"
     required: false
+  post:
+    description: "Post a message to the PR with the result of the checks"
+    required: false
+    default: "true"
 runs:
   using: "composite"
   steps:
@@ -66,6 +70,13 @@ runs:
         echo "$path" > "${{ github.action_path }}/data/path"
         echo "${{ inputs.ignore }}" > "${{ github.action_path }}/data/ignore"
         echo "${{ github.token }}" > "${{ github.action_path }}/data/token"
+
+    - shell: bash
+      run: |
+        if [ "${{ inputs.post }}" == "true" ] || [ "${{ inputs.post }}" == "True" ]; then
+          python3 -m pip install -U aiogithubapi
+          python3 helpers/post_result.py
+        fi
 
     - shell: bash
       run: |
