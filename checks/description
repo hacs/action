@@ -1,0 +1,13 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-repository"
+GROUP="description"
+
+function checkRun () {
+  data=$(repoInfo description)
+  if [ -n "${data}" ] && [ "${data}" != "null" ]; then
+    echo "${data}"
+    checkSuccess "The repository has a description"
+  else
+    checkError "The repository is missing a description"
+  fi
+}

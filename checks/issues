@@ -1,0 +1,14 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-repository"
+GROUP="issues"
+
+function checkRun () {
+  data=$(repoInfo has_issues)
+  repository=$(cat "$GITHUB_ACTION_PATH"/data/repository)
+  echo "https://github.com/$repository/issues"
+  if [ "${data}" == "true" ]; then
+    checkSuccess "The repository has issues enabled"
+  else
+    checkError "The repository have not issues enabled"
+  fi
+}

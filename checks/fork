@@ -1,0 +1,19 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-fork"
+GROUP="fork"
+
+function checkCondition () {
+  action_repository=$(cat "$GITHUB_ACTION_PATH"/data/action_repository)
+  if [ "$action_repository" != "hacs/default" ]; then
+    return 1
+  fi
+}
+
+function checkRun () {
+  data=$(repoInfo fork)
+  if [ "${data}" == "false" ]; then
+    checkSuccess "The repository is not a fork"
+  else
+    checkNeutral "The repository is a fork"
+  fi
+}

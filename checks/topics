@@ -1,0 +1,13 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-repository"
+GROUP="topics"
+
+function checkRun () {
+  data=$(jq .names[] -r "$GITHUB_ACTION_PATH/data/topics") > /dev/null
+  if [ -n "${data}" ]; then
+    echo "${data}"
+    checkSuccess "The repository has topics"
+  else
+    checkError "The repository is missing topics"
+  fi
+}

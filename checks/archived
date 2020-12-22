@@ -1,0 +1,12 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-archived"
+GROUP="archived"
+
+function checkRun () {
+  data=$(repoInfo archived)
+  if [ "${data}" == "false" ]; then
+    checkSuccess "The repository is not archived"
+  else
+    checkError "The repository is archived"
+  fi
+}

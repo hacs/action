@@ -1,0 +1,23 @@
+#!/bin/bash
+URL="https://hacs.xyz/docs/publish/include#check-brands"
+GROUP="brands"
+
+function checkCondition () {
+  category=$(cat "$GITHUB_ACTION_PATH"/data/category)
+  if [ "$category" != "integration" ]; then
+    return 1
+  fi
+}
+
+function checkRun () {
+  echo "https://hacs.xyz/docs/publish/include#check-brands"
+  domain=$(jq .domain -r "$GITHUB_ACTION_PATH/data/manifest.json")
+  git clone --quiet --depth 1 https://github.com/home-assistant/brands.git "$GITHUB_ACTION_PATH/brands" > /dev/null
+  exsist=$(find "$GITHUB_ACTION_PATH/brands" -type d -name "$domain")
+  if [ -n "${exsist}" ]; then
+    echo "${exsist}"
+    checkSuccess "$domain is added to https://github.com/home-assistant/brands NICE!"
+  else
+    checkError "$domain is not added to https://github.com/home-assistant/brands"
+  fi
+}
