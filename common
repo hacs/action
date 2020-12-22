@@ -51,8 +51,6 @@ function checkExecute () {
       checkInit
       checkRun
       checkComplete
-    else
-      echo "⚪ Skipped check: $GROUP" >> "$GITHUB_ACTION_PATH/result"
     fi
   else
     echo "⚪ Ignored check: $GROUP" >> "$GITHUB_ACTION_PATH/result"

@@ -71,23 +71,6 @@ runs:
 
     - shell: bash
       run: |
-        data=$(jq .archived -r "${{ github.action_path }}/data/info") > /dev/null
-        if [[ ! "${{ inputs.ignore }}" =~ archived ]]; then
-          echo "::group::archived"
-          echo "https://hacs.xyz/docs/publish/include#check-archived"
-          if [ "${data}" == "false" ]; then
-            echo "✅ The repository is not archived" >> "${{ github.action_path }}/result"
-          else
-            echo "❌ The repository is archived (more-info: https://hacs.xyz/docs/publish/include#check-archived )" >> "${{ github.action_path }}/result"
-            touch "${{ github.action_path }}/error"
-          fi
-          echo "::endgroup::"
-        else
-          echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
-        fi
-
-    - shell: bash
-      run: |
         if [ "${{ inputs.category }}" == "integration" ]; then
           if [[ ! "${{ inputs.ignore }}" =~ brands ]]; then
             echo "::group::brands"

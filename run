@@ -1,6 +1,7 @@
 #!/bin/bash
 
 declare -a checks=(
+  archived
   manifest
   description
 )

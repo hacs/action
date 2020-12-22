@@ -2,10 +2,6 @@
 URL="https://hacs.xyz/docs/publish/include#check-template"
 GROUP="template"
 
-function checkCondition () {
-  return 0
-}
-
 function checkRun () {
   echo "This is a check template"
 }
