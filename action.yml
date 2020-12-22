@@ -71,24 +71,6 @@ runs:
 
     - shell: bash
       run: |
-        data=$(jq .description -r "${{ github.action_path }}/data/info") > /dev/null
-        if [[ ! "${{ inputs.ignore }}" =~ description ]]; then
-          echo "::group::description"
-          echo "https://hacs.xyz/docs/publish/include#check-repository"
-          if [ ! -z "${data}" ] && [ "${data}" != "null" ]; then
-            echo "${data}"
-            echo "✅ The repository has a description" >> "${{ github.action_path }}/result"
-          else
-            echo "❌ The repository is missing a description (more-info: https://hacs.xyz/docs/publish/include#check-repository )" >> "${{ github.action_path }}/result"
-            touch "${{ github.action_path }}/error"
-          fi
-          echo "::endgroup::"
-        else
-          echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
-        fi
-
-    - shell: bash
-      run: |
         data=$(jq .archived -r "${{ github.action_path }}/data/info") > /dev/null
         if [[ ! "${{ inputs.ignore }}" =~ archived ]]; then
           echo "::group::archived"

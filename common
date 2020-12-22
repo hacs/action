@@ -14,11 +14,8 @@ function checkSuccess () {
 }
 
 function checkError () {
-  msg="$1"
-  echo "::error::$msg"
-  if [ ! -z "$2" ]; then
-    msg+=" (more-info: $2 )"
-  fi
+  echo "::error::$1"
+  msg="$1 (more-info: $URL )"
   echo "❌ $msg" >> "$GITHUB_ACTION_PATH/result"
   touch "$GITHUB_ACTION_PATH/error"
 }
