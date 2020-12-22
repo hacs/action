@@ -31,6 +31,7 @@ async def post():
         print(msg)
         repository = await github.get_repo(name)
         pull = await repository.get_issue(number)
+        print(pull.__dict__)
         comments = await pull.get_comments()
         for comment in comments:
             if IDENTIFIER in comment.body:
