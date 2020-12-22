@@ -1,7 +1,14 @@
 #!/bin/bash
 
-for check in $(find "$GITHUB_ACTION_PATH/checks/" -type f ); do
+declare -a checks=(
+  archived
+  manifest
+  description
+  brands
+)
+
+for check in $({checks[@]}); do
   source "$GITHUB_ACTION_PATH/common"
-  source "$check"
+  source "$GITHUB_ACTION_PATH/checks/$check"
   checkExecute
 done
