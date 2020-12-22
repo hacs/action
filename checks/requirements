@@ -12,7 +12,8 @@ function checkCondition () {
 
 
 function checkRun () {
-  mkdir -p "${{ steps.init.outputs.path }}/requirements"
+  repoPath=$(cat "$GITHUB_ACTION_PATH"/data/path)
+  mkdir -p "$repoPath/requirements"
   wget -q -O "$GITHUB_ACTION_PATH/helpers/requirements/validate_requirements.py" \
     https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/scripts/validate_requirements.py
   cd "$GITHUB_ACTION_PATH/helpers/requirements"
