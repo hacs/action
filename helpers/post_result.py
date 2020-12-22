@@ -3,6 +3,7 @@ import os
 import json
 from aiogithubapi import GitHub
 from aiogithubapi.helpers import async_call_api
+from aiogithubapi.common.const import BASE_API_HEADERS, BASE_API_URL
 
 IDENTIFIER = "<!-- HACS action comment -->"
 
@@ -33,10 +34,10 @@ async def post():
         comments = await pull.get_comments()
         for comment in comments:
             if IDENTIFIER in comment.body:
-                await async_call_api(github.client.session, "POST", f"/repos/{name}/issues/{number}/comments/{comment.id}", data={"body": msg})
+                await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment.id}", data={"body": msg}, headers=BASE_API_HEADERS)
                 return
 
-        await async_call_api(github.client.session, "POST", f"/repos/{name}/issues/{number}/comments", data={"body": msg})
+        await async_call_api(github.client.session, "POST", f"{BASE_API_URL}/repos/{name}/issues/{number}/comments", data={"body": msg}, headers=BASE_API_HEADERS)
 
 
 asyncio.get_event_loop().run_until_complete(post())
