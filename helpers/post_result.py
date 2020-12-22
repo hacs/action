@@ -25,7 +25,7 @@ async def post():
     async with GitHub(get_token()) as github:
         comment_id = None
         repository = await github.get_repo(event["repository"]["full_name"])
-        pull = await repository.get_issue(event["pull_request"]["number"])
+        pull = await repository.get_issue(str(event["number"]))
         comments = await pull.get_comments()
         for comment in comments:
             if IDENTIFIER in comment.body:
