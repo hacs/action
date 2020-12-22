@@ -27,16 +27,13 @@ async def post():
         name = event["repository"]["full_name"]
         number = event["pull_request"]["number"]
         msg = f"Hey!\\n\\n{IDENTIFIER}"
-        print(name)
-        print(number)
-        print(msg)
         repository = await github.get_repo(name)
         pull = await repository.get_issue(number)
         pull.attributes["id"] = number
         comments = await pull.get_comments()
         for comment in comments:
             if IDENTIFIER in comment.body:
-                await comment.update(msg)
+                await async_call_api(github.client.session, "POST", f"/repos/{name}/issues/{number}/comments/{comment.id}", data={"body": msg})
                 return
 
         await async_call_api(github.client.session, "POST", f"/repos/{name}/issues/{number}/comments", data={"body": msg})
