@@ -6,7 +6,20 @@ on:
       - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: ShellCheck
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        env:
+          SHELLCHECK_OPTS: --exclude SC2034
+
   integration:
+    needs: lint
     runs-on: ubuntu-latest
     name: "integration: ${{ matrix.repository }}"
     strategy:
@@ -24,6 +37,7 @@ jobs:
           repository: ${{ matrix.repository }}
 
   theme:
+    needs: lint
     runs-on: ubuntu-latest
     name: "theme: ${{ matrix.repository }}"
     strategy:
@@ -42,6 +56,7 @@ jobs:
           repository: ${{ matrix.repository }}
 
   plugin:
+    needs: lint
     runs-on: ubuntu-latest
     name: "plugin: ${{ matrix.repository }}"
     strategy:
@@ -61,6 +76,7 @@ jobs:
           repository: ${{ matrix.repository }}
 
   netdaemon:
+    needs: lint
     runs-on: ubuntu-latest
     name: "netdaemon: ${{ matrix.repository }}"
     strategy:
@@ -80,6 +96,7 @@ jobs:
           repository: ${{ matrix.repository }}
 
   appdaemon:
+    needs: lint
     runs-on: ubuntu-latest
     name: "appdaemon: ${{ matrix.repository }}"
     strategy:
@@ -98,6 +115,7 @@ jobs:
           repository: ${{ matrix.repository }}
 
   python_script:
+    needs: lint
     runs-on: ubuntu-latest
     name: "python_scripts: ${{ matrix.repository }}"
     strategy:

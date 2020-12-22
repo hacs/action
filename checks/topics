@@ -4,7 +4,7 @@ GROUP="topics"
 
 function checkRun () {
   data=$(jq .names[] -r "$GITHUB_ACTION_PATH/data/topics") > /dev/null
-  if [ ! -z "${data}" ]; then
+  if [ -n "${data}" ]; then
     echo "${data}"
     checkSuccess "The repository has topics"
   else

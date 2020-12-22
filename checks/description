@@ -4,7 +4,7 @@ GROUP="description"
 
 function checkRun () {
   data=$(repoInfo description)
-  if [ ! -z "${data}" ] && [ "${data}" != "null" ]; then
+  if [ -n "${data}" ] && [ "${data}" != "null" ]; then
     echo "${data}"
     checkSuccess "The repository has a description"
   else

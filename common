@@ -5,7 +5,7 @@ EMOJI_RED_X="❌"
 EMOJI_WHITE_CIRCLE="⚪"
 
 function repoInfo () {
-  info=$(jq .$1 -r "$GITHUB_ACTION_PATH/data/info") > /dev/null
+  info=$(jq ."$1" -r "$GITHUB_ACTION_PATH/data/info") > /dev/null
   echo "$info"
 }
 
@@ -51,16 +51,16 @@ function checkCondition () {
 
 function checkIgnored () {
   ignore=$(cat "$GITHUB_ACTION_PATH/data/ignore")
-  if [[ "$ignore" =~ "$GROUP" ]]; then
+  if [[ "$ignore" =~ $GROUP ]]; then
     return 1
   fi
 }
 
 function checkExecute () {
   checkIgnored
-  if [ "$?" == 0 ];then
+  if "$?";then
     checkCondition
-    if [ "$?" == 0 ];then
+    if "$?";then
       checkInit
       checkRun
       checkComplete

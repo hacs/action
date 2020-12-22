@@ -28,15 +28,15 @@ runs:
 
         git clone --quiet --depth 1 https://github.com/hacs/integration.git "${{ github.action_path }}/hacs" > /dev/null
 
-        if [ ! -z "${{ github.event.inputs.repository }}" ]; then
+        if [ -n "${{ github.event.inputs.repository }}" ]; then
           repository="${{ github.event.inputs.repository }}"
-        elif [ ! -z "${{ inputs.repository }}" ]; then
+        elif [ -n "${{ inputs.repository }}" ]; then
           repository="${{ inputs.repository }}"
         else
           repository="${{ github.repository }}"
         fi
 
-        if [ ! -z "${{ github.event.inputs.category }}" ]; then
+        if [ -n "${{ github.event.inputs.category }}" ]; then
           category="${{ github.event.inputs.category }}"
         else
           category="${{ inputs.category }}"

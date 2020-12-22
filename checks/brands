@@ -14,7 +14,7 @@ function checkRun () {
   domain=$(jq .domain -r "$GITHUB_ACTION_PATH/data/manifest.json")
   git clone --quiet --depth 1 https://github.com/home-assistant/brands.git "$GITHUB_ACTION_PATH/brands" > /dev/null
   exsist=$(find "$GITHUB_ACTION_PATH/brands" -type d -name "$domain")
-  if [ ! -z "${exsist}" ]; then
+  if [ -n "${exsist}" ]; then
     echo "${exsist}"
     checkSuccess "$domain is added to https://github.com/home-assistant/brands NICE!"
   else

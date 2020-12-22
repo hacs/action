@@ -12,7 +12,7 @@ function checkCondition () {
 
 function checkRun () {
   images=$(python3 "$GITHUB_ACTION_PATH"/helpers/findimages.py)
-  if [ ! -z "${images}" ]; then
+  if [ -n "${images}" ]; then
     echo "${images}"
     checkSuccess "Information file has images"
   else
