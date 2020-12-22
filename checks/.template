@@ -1,7 +1,0 @@
-#!/bin/bash
-URL="https://hacs.xyz/docs/publish/include#check-template"
-GROUP="template"
-
-function checkRun () {
-  echo "This is a check template"
-}
