@@ -35,7 +35,7 @@ async def post():
 
         request = await github.client.session.get(_endpoint, headers=_headers)
         comments = await request.json()
-        for comment in comments.data:
+        for comment in comments:
             if IDENTIFIER in comment["body"]:
                 _endpoint = f"{BASE_API_URL}/repos/{name}/issues/{number}/comments/{comment['id']}"
                 break
