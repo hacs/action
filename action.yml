@@ -71,28 +71,6 @@ runs:
 
     - shell: bash
       run: |
-        if [ "${{ inputs.category }}" == "integration" ]; then
-          if [[ ! "${{ inputs.ignore }}" =~ brands ]]; then
-            echo "::group::brands"
-            echo "https://hacs.xyz/docs/publish/include#check-brands"
-            domain=$(jq .domain -r ${{ steps.manifest.outputs.path }})
-            git clone --quiet --depth 1 https://github.com/home-assistant/brands.git "${{ github.action_path }}/brands" > /dev/null
-            exsist=$(find "${{ github.action_path }}/brands" -type d -name "$domain")
-            if [ ! -z "${exsist}" ]; then
-              echo "${exsist}"
-              echo "✅ $domain is added to https://github.com/home-assistant/brands NICE!" >> "${{ github.action_path }}/result"
-            else
-              echo "❌ $domain is not added to https://github.com/home-assistant/brands (more-info: https://hacs.xyz/docs/publish/include#check-brands )" >> "${{ github.action_path }}/result"
-              touch "${{ github.action_path }}/error"
-            fi
-            echo "::endgroup::"
-          else
-            echo "⚪ Skipped check: description" >> "${{ github.action_path }}/result"
-          fi
-        fi
-
-    - shell: bash
-      run: |
         data=$(jq .names[] -r "${{ github.action_path }}/data/topics") > /dev/null
         if [[ ! "${{ inputs.ignore }}" =~ topics ]]; then
           echo "::group::topics"

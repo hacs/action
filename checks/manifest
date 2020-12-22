@@ -23,7 +23,7 @@ function checkRun () {
     exit 1
   else
     checkSuccess "manifest.json file exist"
-    cat "$manifest" | jq .
+    cat "$manifest" | jq . > "$GITHUB_ACTION_PATH/data/manifest.json"
     for key in ${requiredKeys[@]}; do
       if [ "$(jq --arg entry $key '.[$entry]' -r "$manifest")" == "null" ]; then
         checkError "manifest.json file missing key $key"
