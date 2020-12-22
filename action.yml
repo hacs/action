@@ -81,7 +81,7 @@ runs:
         if [ "${{ inputs.comment }}" == "true" ]; then
           python3 -m pip install -U wheel setuptools > /dev/null
           python3 -m pip install -U aiogithubapi > /dev/null
-          python3 helpers/post_result.py
+          python3 "${{ github.action_path }}/helpers/post_result.py"
         fi
 
     - shell: bash
