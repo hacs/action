@@ -73,3 +73,7 @@ runs:
 
     - shell: bash
       run: bash "${{ github.action_path }}/helpers/wrapup" "${{ github.action_path }}"
+
+    - shell: bash
+      run: |
+        bash "${{ github.action_path }}/helpers/cleanup"

@@ -4,9 +4,11 @@ GROUP="requirements"
 
 function checkCondition () {
   category=$(cat "$GITHUB_ACTION_PATH"/data/category)
-  requirements=$(jq -r '. | select(.requirements != null) | .requirements[]' "$GITHUB_ACTION_PATH/data/manifest.json") > /dev/null
-  if [ "$category" != "integration" ] || [ -z "$requirements" ]; then
-    return 1
+  if [ "$category" != "integration" ]; then
+    requirements=$(jq -r '. | select(.requirements != null) | .requirements[]' "$GITHUB_ACTION_PATH/data/manifest.json") > /dev/null
+    if [ -z "$requirements" ]; then
+      return 1
+    fi
   fi
 }
 
