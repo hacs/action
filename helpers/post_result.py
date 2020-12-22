@@ -18,20 +18,24 @@ def get_event():
 
 async def post():
     event = json.loads(get_event())
-    print(event)
+    print(json.dumps(event))
     if not event.get('pull_request'):
         return
 
     async with GitHub(get_token()) as github:
         comment_id = None
-        repository = await github.get_repo(event["repository"]["full_name"])
-        pull = await repository.get_issue(str(event["number"]))
+        name = event["repository"]["full_name"]
+        number = event["pull_request"]["number"]
+        print(name)
+        print(number)
+        repository = await github.get_repo(name)
+        pull = await repository.get_issue(number)
         comments = await pull.get_comments()
         for comment in comments:
             if IDENTIFIER in comment.body:
                 comment_id = comment.id
 
-        if not comment_id:
+        if comment_id is None:
             await pull.comment(f"Hey!\n\n{IDENTIFIER}")
 
 
