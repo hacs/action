@@ -19,7 +19,7 @@ def get_event():
 
 
 def get_result():
-    with open(f"{os.getenv('GITHUB_ACTION_PATH')}/result", "r") as result:
+    with open(f"{os.getenv('GITHUB_ACTION_PATH')}/result", "rb") as result:
         return result.read().decode("UTF-8")
 
 
