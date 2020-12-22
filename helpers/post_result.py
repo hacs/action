@@ -2,7 +2,6 @@ import asyncio
 import os
 import json
 from aiogithubapi import GitHub
-from aiogithubapi.helpers import async_call_api
 from aiogithubapi.common.const import BASE_API_HEADERS, BASE_API_URL
 
 IDENTIFIER = "<!-- HACS action comment -->"
@@ -20,7 +19,6 @@ def get_event():
 
 async def post():
     event = json.loads(get_event())
-    print(json.dumps(event))
     if not event.get('pull_request'):
         return
 
