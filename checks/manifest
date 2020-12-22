@@ -17,13 +17,15 @@ function checkCondition () {
 }
 
 function checkRun () {
-  manifest=$(find "$(cat $GITHUB_ACTION_PATH/data/path)" -name manifest.json)
+  repoPath=$(cat "$GITHUB_ACTION_PATH"/data/repath)
+  manifest=$(find "$repoPath" -name manifest.json)
   if [ ! -f "$manifest" ]; then
     checkError "manifest.json file not found"
     exit 1
   else
     checkSuccess "manifest.json file exist"
     cat "$manifest" | jq . > "$GITHUB_ACTION_PATH/data/manifest.json"
+    jq . "$GITHUB_ACTION_PATH/data/manifest.json"
     for key in ${requiredKeys[@]}; do
       if [ "$(jq --arg entry $key '.[$entry]' -r "$manifest")" == "null" ]; then
         checkError "manifest.json file missing key $key"
