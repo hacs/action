@@ -9,7 +9,7 @@ IDENTIFIER = "<!-- HACS action comment -->"
 
 def get_token():
     with open(f"{os.getenv('GITHUB_ACTION_PATH')}/data/token", "r") as token:
-        return token.read()
+        return token.read().replace("\n", "")
 
 
 def get_event():
@@ -39,7 +39,9 @@ async def post():
                 break
 
         result = await github.client.session.post(_endpoint, json={"body": msg}, headers=_headers)
-        print(result.__dict__)
+        if result.status != 200:
+            print(result.reason)
+            exit(1)
 
 
 asyncio.get_event_loop().run_until_complete(post())
