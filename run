@@ -9,7 +9,7 @@ declare -a checks=(
   issues
 )
 
-for check in $({checks[@]}); do
+for check in ${checks[@]}; do
   source "$GITHUB_ACTION_PATH/common"
   source "$GITHUB_ACTION_PATH/checks/$check"
   checkExecute
