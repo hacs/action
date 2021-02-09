@@ -21,7 +21,7 @@ function checkRun () {
   cd "$repoPath/wheels-custom-integrations"
   jq -r .requirements "$GITHUB_ACTION_PATH/data/manifest.json" > ./requirements.json
   jq . ./requirements.json
-  cp  "$GITHUB_ACTION_PATH/helpers/requirements/__main__.py" "$repoPath/wheels-custom-integrations/validate_requirements"
+  cp  "$GITHUB_ACTION_PATH/helpers/requirements/run.py" "$repoPath/wheels-custom-integrations/validate_requirements"
   cp  "$GITHUB_ACTION_PATH/helpers/requirements/run.sh" "$repoPath/wheels-custom-integrations/validate_requirements"
   touch "$repoPath/wheels-custom-integrations/validate_requirements/files.json"
   touch "$repoPath/wheels-custom-integrations/validate_requirements/__init__.py"

@@ -1,3 +1,4 @@
 #!/bin/sh
 
-jq -r '.[]' /validate/files.json | python3 /validate
+cd /validate
+python3 run.py
