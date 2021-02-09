@@ -1,5 +1,6 @@
 #!/bin/sh
 
-cd /validate || exit 1
-ls -la
-python3 run.py
+mkdir -p /action
+mv /validate /action/validate
+cd /action || exit 1
+python3 -m validate
