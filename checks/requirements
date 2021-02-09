@@ -17,14 +17,16 @@ function checkCondition () {
 function checkRun () {
   repoPath=$(cat "$GITHUB_ACTION_PATH"/data/path)
   mkdir -p "$repoPath/requirements"
-  wget -q -O "$GITHUB_ACTION_PATH/helpers/requirements/validate_requirements.py" \
-    https://raw.githubusercontent.com/home-assistant/wheels-custom-integrations/master/scripts/validate_requirements.py
-  cd "$GITHUB_ACTION_PATH/helpers/requirements"
-  jq -r .requirements "$GITHUB_ACTION_PATH/data/manifest.json" > ./requirements.json
+  git clone --depth 1 https://github.com/home-assistant/wheels-custom-integrations.git "$repoPath/wheels-custom-integrations"
+  cd "$repoPath/wheels-custom-integrations"
+  jq -r .requirements "$GITHUB_ACTION_PATH/data/manifest.json" > "$repoPath/wheels-custom-integrations/validate_requirements/requirements.json"
   jq . ./requirements.json
-  docker build . -t homeassistant/home-assistant:beta
+  cp  "$GITHUB_ACTION_PATH/helpers/requirements/__init__.py" "$repoPath/wheels-custom-integrations/validate_requirements"
+  cp  "$GITHUB_ACTION_PATH/helpers/requirements/run.sh" "$repoPath/wheels-custom-integrations/validate_requirements"
+  touch "$repoPath/wheels-custom-integrations/validate_requirements/files.json"
+  docker build -t validate -f validate_requirements/Dockerfile .
   set +e
-  docker run homeassistant/home-assistant:beta
+  docker run --rm validate
   requirements="$?"
   set -e
   if [ "${requirements}" == 0 ]; then
