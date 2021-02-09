@@ -1,4 +1,4 @@
 #!/bin/sh
 
-cd /validate
+cd /validate || exit 1
 python3 run.py
