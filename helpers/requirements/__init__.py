@@ -13,9 +13,8 @@ def validate() -> bool:
     """Do the validation."""
     print("Validating requirements")
     print()
-    piped_input = sys.stdin.read()
     requirements = []
-    with open("/action/validate/requirements.json", "r") as requirements_file:
+    with open("/action/validate/files.json", "r") as requirements_file:
         requirements = json.loads(requirements_file.read())
     validated_ok = True
     print("Requirements to validate:", len(requirements))

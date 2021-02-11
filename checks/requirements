@@ -19,11 +19,10 @@ function checkRun () {
   mkdir -p "$repoPath/requirements"
   git clone --depth 1 https://github.com/home-assistant/wheels-custom-integrations.git "$repoPath/wheels-custom-integrations"
   cd "$repoPath/wheels-custom-integrations"
-  jq -r .requirements "$GITHUB_ACTION_PATH/data/manifest.json" > "$repoPath/wheels-custom-integrations/validate_requirements/requirements.json"
+  jq -r .requirements "$GITHUB_ACTION_PATH/data/manifest.json" > "$repoPath/wheels-custom-integrations/validate_requirements/files.json"
   jq . "$repoPath/wheels-custom-integrations/validate_requirements/requirements.json"
   cp  "$GITHUB_ACTION_PATH/helpers/requirements/__init__.py" "$repoPath/wheels-custom-integrations/validate_requirements"
   cp  "$GITHUB_ACTION_PATH/helpers/requirements/run.sh" "$repoPath/wheels-custom-integrations/validate_requirements"
-  touch "$repoPath/wheels-custom-integrations/validate_requirements/files.json"
   docker build -t validate -f validate_requirements/Dockerfile .
   set +e
   docker run --rm validate
