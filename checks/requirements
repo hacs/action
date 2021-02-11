@@ -27,7 +27,7 @@ function checkRun () {
   python3 "$repoPath/wheels-custom-integrations/additional_requirements.py"
   docker build -t validate -f validate_requirements/Dockerfile .
   set +e
-  docker run --rm validate
+  docker run -e CRYPTOGRAPHY_DONT_BUILD_RUST=1 --rm validate
   requirements="$?"
   set -e
   if [ "${requirements}" == 0 ]; then
