@@ -22,6 +22,9 @@ function checkRun () {
   jq -r .requirements "$GITHUB_ACTION_PATH/data/manifest.json" > "$repoPath/wheels-custom-integrations/validate_requirements/files.json"
   cp  "$GITHUB_ACTION_PATH/helpers/requirements/__init__.py" "$repoPath/wheels-custom-integrations/validate_requirements"
   cp  "$GITHUB_ACTION_PATH/helpers/requirements/run.sh" "$repoPath/wheels-custom-integrations/validate_requirements"
+  cp  "$GITHUB_ACTION_PATH/helpers/requirements/additional_requirements.py" "$repoPath/wheels-custom-integrations"
+  cp  "$GITHUB_ACTION_PATH/helpers/requirements/additional_requirements.json" "$repoPath/wheels-custom-integrations"
+  python3 "$repoPath/wheels-custom-integrations/additional_requirements.py"
   docker build -t validate -f validate_requirements/Dockerfile .
   set +e
   docker run --rm validate
