@@ -35,7 +35,7 @@ jobs:
 
 ## Ignorable checks
 
-All these checks can be disabled with `with.ignore`:
+All these checks can be disabled with `with.ignore`. Use a string, and if you ignore multiple ones, seperate them with spaces.
 
 | Check          | More info                | Description                                                         |
 | -------------- | ------------------------ | ------------------------------------------------------------------- |
