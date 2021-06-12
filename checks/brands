@@ -11,9 +11,14 @@ function checkCondition () {
 
 function checkRun () {
   echo "https://hacs.xyz/docs/publish/include#check-brands"
+  action_repository=$(cat "$GITHUB_ACTION_PATH"/data/action_repository)
   domain=$(jq .domain -r "$GITHUB_ACTION_PATH/data/manifest.json")
   git clone --quiet --depth 1 https://github.com/home-assistant/brands.git "$GITHUB_ACTION_PATH/brands" > /dev/null
-  exsist=$(find "$GITHUB_ACTION_PATH/brands" -type d -name "$domain")
+  if [ "$action_repository" == "hacs/default" ]; then
+    exsist=$(find "$GITHUB_ACTION_PATH/brands/custom_integrations" -type d -name "$domain")
+  else
+    exsist=$(find "$GITHUB_ACTION_PATH/brands" -type d -name "$domain")
+  fi
   if [ -n "${exsist}" ]; then
     echo "${exsist}"
     checkSuccess "$domain is added to https://github.com/home-assistant/brands NICE!"
