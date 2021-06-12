@@ -23,6 +23,10 @@ function checkRun () {
     echo "${exsist}"
     checkSuccess "$domain is added to https://github.com/home-assistant/brands NICE!"
   else
-    checkError "$domain is not added to https://github.com/home-assistant/brands"
+    if [ "$action_repository" == "hacs/default" ]; then
+      checkError "$domain is not added to the custom_integration directory in https://github.com/home-assistant/brands"
+    else
+      checkError "$domain is not added to https://github.com/home-assistant/brands"
+    fi
   fi
 }
