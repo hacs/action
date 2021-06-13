@@ -28,7 +28,7 @@ runs:
     - shell: bash
       id: init
       run: |
-        echo "::group:init"
+        echo "::group::init"
         mkdir -p "${{ github.action_path }}/data"
 
         git clone --quiet --depth 1 https://github.com/hacs/integration.git "${{ github.action_path }}/hacs" > /dev/null
