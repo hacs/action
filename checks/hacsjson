@@ -17,7 +17,7 @@ function checkRun () {
     fi
 
     iot_class=$(jq .iot_class "$GITHUB_ACTION_PATH/data/hacs.json")
-    if [ ! -n "${iot_class}" ]; then
+    if [ -z "${iot_class}" ]; then
       checkWarning "'iot_class' is defined in hacs.json, this should be defined in manifest.json https://developers.home-assistant.io/docs/creating_integration_manifest/#iot-class"
     fi
   fi
