@@ -11,7 +11,7 @@ jobs:
     name: Lint
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
 
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
@@ -30,7 +30,7 @@ jobs:
           - hacs/integration
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
 
       - name: HACS Action
         uses: ./
@@ -49,7 +49,7 @@ jobs:
           - home-assistant-community-themes/template
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
 
       - name: HACS Action
         uses: ./
@@ -69,7 +69,7 @@ jobs:
           - custom-cards/boilerplate-card
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
 
       - name: HACS Action
         uses: ./
@@ -90,7 +90,7 @@ jobs:
           - net-daemon/netdaemon-app-template
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
 
       - name: HACS Action
         uses: ./
@@ -110,7 +110,7 @@ jobs:
           - ludeeus/ad-hacs
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
 
       - name: HACS Action
         uses: ./
@@ -130,7 +130,7 @@ jobs:
           - ludeeus/ps-hacs
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
 
       - name: HACS Action
         uses: ./
