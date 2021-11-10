@@ -3,6 +3,9 @@ URL="https://hacs.xyz/docs/publish/include#check-wheels"
 GROUP="wheels"
 
 function checkCondition () {
+  # Currently disabled for all categories
+  return 1
+
   category=$(cat "$GITHUB_ACTION_PATH"/data/category)
   if [ "$category" == "integration" ]; then
     requirements=$(jq -r '. | select(.requirements != null) | .requirements[]' "$GITHUB_ACTION_PATH/data/manifest.json") > /dev/null
