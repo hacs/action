@@ -27,7 +27,9 @@ function checkRun () {
   python3 "$repoPath/wheels-custom-integrations/additional_requirements.py"
   docker build -t validate -f validate_requirements/Dockerfile .
   set +e
-  docker run -e CRYPTOGRAPHY_DONT_BUILD_RUST=1 --rm validate
+  docker run \
+    -e PIP_EXTRA_INDEX_URL="https://wheels.home-assistant.io/alpine-3.14/amd64/" \
+    --rm validate
   requirements="$?"
   set -e
   if [ "${requirements}" == 0 ]; then
