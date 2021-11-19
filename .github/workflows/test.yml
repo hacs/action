@@ -29,10 +29,6 @@ jobs:
         repository:
           - { "name": "hacs/integration", "category": "integration" }
           - {
-              "name": "custom-components/alexa_media_player",
-              "category": "integration",
-            }
-          - {
               "name": "basnijholt/lovelace-ios-dark-mode-theme",
               "category": "theme",
             }
