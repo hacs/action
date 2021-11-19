@@ -1,5 +1,5 @@
 #!/bin/bash
-URL="https://hacs.xyz/docs/publish/include#check-requirements"
+URL="https://github.com/hacs/action#ignorable-checks"
 GROUP="requirements"
 
 function checkCondition () {
