@@ -20,14 +20,56 @@ jobs:
         env:
           SHELLCHECK_OPTS: --exclude SC2034
 
-  integration:
+  repository:
     needs: lint
     runs-on: ubuntu-latest
-    name: "integration: ${{ matrix.repository }}"
+    name: "${{ matrix.repository.category }}: ${{ matrix.repository.name }}"
     strategy:
       matrix:
         repository:
-          - hacs/integration
+          - { "name": "hacs/integration", "category": "integration" }
+          - {
+              "name": "custom-components/alexa_media_player",
+              "category": "integration",
+            }
+          - {
+              "name": "basnijholt/lovelace-ios-dark-mode-theme",
+              "category": "theme",
+            }
+          - {
+              "name": "home-assistant-community-themes/template",
+              "category": "theme",
+            }
+          - {
+              "name": "ofekashery/vertical-stack-in-card",
+              "category": "plugin",
+              "ignore": "images",
+            }
+          - {
+              "name": "custom-cards/boilerplate-card",
+              "category": "plugin",
+              "ignore": "images",
+            }
+          - {
+              "name": "hacs/ND-NotifyUpdates",
+              "category": "netdaemon",
+              "ignore": "topics",
+            }
+          - {
+              "name": "net-daemon/netdaemon-app-template",
+              "category": "netdaemon",
+              "ignore": "topics",
+            }
+          - {
+              "name": "ludeeus/ad-hacs",
+              "category": "appdaemon",
+              "ignore": "hacsjson",
+            }
+          - {
+              "name": "ludeeus/ps-hacs",
+              "category": "python_scripts",
+              "ignore": "hacsjson information",
+            }
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2.4.0
@@ -35,107 +77,7 @@ jobs:
       - name: HACS Action
         uses: ./
         with:
-          category: integration
-          repository: ${{ matrix.repository }}
-
-  theme:
-    needs: lint
-    runs-on: ubuntu-latest
-    name: "theme: ${{ matrix.repository }}"
-    strategy:
-      matrix:
-        repository:
-          - basnijholt/lovelace-ios-dark-mode-theme
-          - home-assistant-community-themes/template
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2.4.0
-
-      - name: HACS Action
-        uses: ./
-        with:
-          category: theme
           comment: false
-          repository: ${{ matrix.repository }}
-
-  plugin:
-    needs: lint
-    runs-on: ubuntu-latest
-    name: "plugin: ${{ matrix.repository }}"
-    strategy:
-      matrix:
-        repository:
-          - ofekashery/vertical-stack-in-card
-          - custom-cards/boilerplate-card
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2.4.0
-
-      - name: HACS Action
-        uses: ./
-        with:
-          category: plugin
-          ignore: images
-          comment: false
-          repository: ${{ matrix.repository }}
-
-  netdaemon:
-    needs: lint
-    runs-on: ubuntu-latest
-    name: "netdaemon: ${{ matrix.repository }}"
-    strategy:
-      matrix:
-        repository:
-          - hacs/ND-NotifyUpdates
-          - net-daemon/netdaemon-app-template
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2.4.0
-
-      - name: HACS Action
-        uses: ./
-        with:
-          category: netdaemon
-          ignore: topics
-          comment: false
-          repository: ${{ matrix.repository }}
-
-  appdaemon:
-    needs: lint
-    runs-on: ubuntu-latest
-    name: "appdaemon: ${{ matrix.repository }}"
-    strategy:
-      matrix:
-        repository:
-          - ludeeus/ad-hacs
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2.4.0
-
-      - name: HACS Action
-        uses: ./
-        with:
-          category: appdaemon
-          ignore: hacsjson
-          comment: false
-          repository: ${{ matrix.repository }}
-
-  python_script:
-    needs: lint
-    runs-on: ubuntu-latest
-    name: "python_scripts: ${{ matrix.repository }}"
-    strategy:
-      matrix:
-        repository:
-          - ludeeus/ps-hacs
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2.4.0
-
-      - name: HACS Action
-        uses: ./
-        with:
-          category: python_scripts
-          ignore: hacsjson information
-          comment: false
-          repository: ${{ matrix.repository }}
+          category: ${{ matrix.repository.category }}
+          ignore: ${{ matrix.repository.ignore }}
+          repository: ${{ matrix.repository.name }}
