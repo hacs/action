@@ -1,5 +1,6 @@
 {
   "apk": [
-      "rust"
+    "rust",
+    "cargo"
   ]
 }
