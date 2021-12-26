@@ -4,16 +4,14 @@ import json
 import os
 
 import aiohttp
-from aiogithubapi import GitHub
+from aiogithubapi import GitHub, GitHubAPI
 from homeassistant.core import HomeAssistant
 
-from custom_components.hacs.hacsbase.configuration import Configuration
-from custom_components.hacs.helpers.classes.exceptions import HacsException
-from custom_components.hacs.helpers.functions.logger import getLogger
-from custom_components.hacs.helpers.functions.register_repository import (
-    register_repository,
-)
-from custom_components.hacs.share import get_hacs
+from custom_components.hacs.base import HacsBase
+from custom_components.hacs.const import HACS_ACTION_GITHUB_API_HEADERS
+from custom_components.hacs.exceptions import HacsException
+from custom_components.hacs.utils.logger import getLogger
+from custom_components.hacs.validate.manager import ValidationManager
 
 TOKEN = os.getenv("INPUT_GITHUB_TOKEN")
 GITHUB_WORKSPACE = os.getenv("GITHUB_WORKSPACE")
@@ -111,7 +109,7 @@ async def preflight():
         error("No category found, use env CATEGORY to set this.")
 
     async with aiohttp.ClientSession() as session:
-        github = GitHub(TOKEN, session)
+        github = GitHub(TOKEN, session, headers=HACS_ACTION_GITHUB_API_HEADERS)
         repo = await github.get_repo(repository)
         if ref is None and GITHUB_REPOSITORY != "hacs/default":
             ref = repo.default_branch
@@ -122,15 +120,29 @@ async def preflight():
 async def validate_repository(repository, category, ref=None):
     """Validate."""
     async with aiohttp.ClientSession() as session:
-        hacs = get_hacs()
+        hacs = HacsBase()
         hacs.hass = HomeAssistant()
         hacs.session = session
-        hacs.configuration = Configuration()
         hacs.configuration.token = TOKEN
         hacs.core.config_path = None
-        hacs.github = GitHub(hacs.configuration.token, hacs.session)
+        hacs.validation = ValidationManager(hacs=hacs, hass=hacs.hass)
+        ## Legacy GitHub client
+        hacs.github = GitHub(
+            hacs.configuration.token,
+            session,
+            headers=HACS_ACTION_GITHUB_API_HEADERS,
+        )
+
+        ## New GitHub client
+        hacs.githubapi = GitHubAPI(
+            token=hacs.configuration.token,
+            session=session,
+            **{"client_name": "HACS/Action"},
+        )
         try:
-            await register_repository(repository, category, ref=ref)
+            await hacs.async_register_repository(
+                repository_full_name=repository, category=category, ref=ref
+            )
         except HacsException as exception:
             error(exception)
 

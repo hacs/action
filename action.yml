@@ -73,7 +73,6 @@ runs:
         echo "${{ inputs.ignore }}" > "${{ github.action_path }}/data/ignore"
         echo "${{ github.token }}" > "${{ github.action_path }}/data/token"
 
-        sudo apt install -y python3-testresources
         echo "::endgroup::"
 
     - shell: bash
