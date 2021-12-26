@@ -128,17 +128,14 @@ async def validate_repository(repository, category, ref=None):
         hacs.github = GitHub(
             hacs.configuration.token,
             session,
-            headers={
-                "User-Agent": f"HACS/{hacs.version}",
-                "Accept": ACCEPT_HEADERS["preview"],
-            },
+            headers=HACS_ACTION_GITHUB_API_HEADERS,
         )
 
         ## New GitHub client
         hacs.githubapi = GitHubAPI(
             token=hacs.configuration.token,
             session=session,
-            **{"client_name": f"HACS/{hacs.version}"},
+            **{"client_name": "HACS/Action"},
         )
         try:
             await hacs.async_register_repository(
