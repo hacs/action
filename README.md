@@ -8,7 +8,6 @@ _Repository validation action for HACS_
 | -------- | ---------------------------------------------------------------------------------------- |
 | ignore   | A space seperated list of ignored checks                                                 |
 | category | The type of repository (integration, plugin, theme, netdaemon, appdaemon, python_script) |
-| comment  | Post the results of the cheks to the PR (true, false)                                    |
 
 ## Example
 
@@ -49,7 +48,6 @@ All these checks can be disabled with `with.ignore`. Use a string, and if you ig
 | `issues`       | [More info][issues]      | Checks that issues are enabled                                      |
 | `requirements` |                          | Checks that the integration does not import builtin python packages |
 | `topics`       | [More info][topics]      | Checks that the repository has topics                               |
-| `wheels`       | [More info][wheels]      | Checks if the domain is added to the custom wheels repo             |
 
 [archived]: https://hacs.xyz/docs/publish/include#check-archived
 [brands]: https://hacs.xyz/docs/publish/include#check-brands
@@ -60,7 +58,6 @@ All these checks can be disabled with `with.ignore`. Use a string, and if you ig
 [information]: https://hacs.xyz/docs/publish/include#check-info
 [issues]: https://hacs.xyz/docs/publish/include#check-repository
 [topics]: https://hacs.xyz/docs/publish/include#check-repository
-[wheels]: https://hacs.xyz/docs/publish/include#check-wheels
 
 ## Versions
 
