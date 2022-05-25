@@ -63,7 +63,7 @@ jobs:
             }
           - {
               "name": "ludeeus/ps-hacs",
-              "category": "python_scripts",
+              "category": "python_script",
               "ignore": "hacsjson information",
             }
     steps:

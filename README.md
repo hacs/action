@@ -36,23 +36,20 @@ jobs:
 
 All these checks can be disabled with `with.ignore`. Use a string, and if you ignore multiple ones, seperate them with spaces.
 
-| Check          | More info                | Description                                                         |
-| -------------- | ------------------------ | ------------------------------------------------------------------- |
-| `archived`     | [More info][archived]    | Checks if the repository is archived                                |
-| `brands`       | [More info][brands]      | Checks if the domain is added to the brands repo                    |
-| `description`  | [More info][description] | Checks if the repository has a description                          |
-| `hacs`         | [More info][hacs]        | Loads the repository with HACS                                      |
-| `hacsjson`     | [More info][hacsjson]    | Checks that hacs.json exists                                        |
-| `images`       | [More info][images]      | Checks that the info file has images                                |
-| `information`  | [More info][information] | Checks that the repo has an information file                        |
-| `issues`       | [More info][issues]      | Checks that issues are enabled                                      |
-| `requirements` |                          | Checks that the integration does not import builtin python packages |
-| `topics`       | [More info][topics]      | Checks that the repository has topics                               |
+| Check         | More info                | Description                                      |
+| ------------- | ------------------------ | ------------------------------------------------ |
+| `archived`    | [More info][archived]    | Checks if the repository is archived             |
+| `brands`      | [More info][brands]      | Checks if the domain is added to the brands repo |
+| `description` | [More info][description] | Checks if the repository has a description       |
+| `hacsjson`    | [More info][hacsjson]    | Checks that hacs.json exists                     |
+| `images`      | [More info][images]      | Checks that the info file has images             |
+| `information` | [More info][information] | Checks that the repo has an information file     |
+| `issues`      | [More info][issues]      | Checks that issues are enabled                   |
+| `topics`      | [More info][topics]      | Checks that the repository has topics            |
 
 [archived]: https://hacs.xyz/docs/publish/include#check-archived
 [brands]: https://hacs.xyz/docs/publish/include#check-brands
 [description]: https://hacs.xyz/docs/publish/include#check-repository
-[hacs]: https://hacs.xyz/docs/publish/include#check-hacs
 [hacsjson]: https://hacs.xyz/docs/publish/include#check-hacs-manifest
 [images]: https://hacs.xyz/docs/publish/include#check-images
 [information]: https://hacs.xyz/docs/publish/include#check-info
