@@ -18,6 +18,10 @@ inputs:
     description: "Post a comment to the PR with the result of the checks"
     required: false
     default: "true"
+  github_token:
+    description: "Personal access token (PAT)"
+    required: false
+    default: ${{ github.token }}
 runs:
   using: "docker"
   image: "ghcr.io/hacs/action:main"
