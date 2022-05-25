@@ -39,7 +39,7 @@ jobs:
           - {
               "name": "ofekashery/vertical-stack-in-card",
               "category": "plugin",
-              "ignore": "images",
+              "ignore": "images topics",
             }
           - {
               "name": "custom-cards/boilerplate-card",

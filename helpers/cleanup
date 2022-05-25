@@ -1,6 +1,0 @@
-rm -rf "$GITHUB_ACTION_PATH/data"
-rm -rf "$GITHUB_ACTION_PATH/hacs"
-rm -rf "$GITHUB_ACTION_PATH/brands"
-rm -rf "$GITHUB_ACTION_PATH/default"
-rm -f "$GITHUB_ACTION_PATH/error"
-rm -f "$GITHUB_ACTION_PATH/result"
