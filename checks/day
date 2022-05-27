@@ -1,7 +1,0 @@
-#!/bin/bash
-URL=$(date +%A)
-GROUP="day"
-
-function checkRun () {
-  checkSuccess "This day ends with an 'y' ($(date +%A))"
-}

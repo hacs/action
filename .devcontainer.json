@@ -1,0 +1,23 @@
+{
+  "name": "hacs/action",
+  "image": "ghcr.io/ludeeus/devcontainer/python:stable",
+  "containerEnv": {
+    "GITHUB_ACTION_PATH": "./"
+  },
+  "context": "..",
+  "extensions": [
+    "github.vscode-pull-request-github",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "esbenp.prettier-vscode"
+  ],
+  "settings": {
+    "files.eol": "\n",
+    "editor.tabSize": 2,
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "files.trimTrailingWhitespace": true
+  }
+}
