@@ -24,4 +24,4 @@ inputs:
     default: ${{ github.token }}
 runs:
   using: "docker"
-  image: "docker://ghcr.io/hacs/action:main"
+  image: "docker://ghcr.io/hacs/action:test"
