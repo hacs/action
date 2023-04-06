@@ -37,11 +37,6 @@ jobs:
               "ignore": "topics",
             }
           - {
-              "name": "net-daemon/netdaemon-app-template",
-              "category": "netdaemon",
-              "ignore": "topics",
-            }
-          - {
               "name": "ludeeus/ad-hacs",
               "category": "appdaemon",
               "ignore": "hacsjson",
