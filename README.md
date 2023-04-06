@@ -4,10 +4,10 @@ _Repository validation action for HACS_
 
 ## Inputs
 
-| Input    | Description                                                                              |
-| -------- | ---------------------------------------------------------------------------------------- |
-| ignore   | A space seperated list of ignored checks                                                 |
-| category | The type of repository (integration, plugin, theme, netdaemon, appdaemon, python_script) |
+| Input    | Description                                                                                        |
+| -------- | -------------------------------------------------------------------------------------------------- |
+| ignore   | A space seperated list of ignored checks                                                           |
+| category | The type of repository (integration, plugin, template, theme, netdaemon, appdaemon, python_script) |
 
 ## Example
 
