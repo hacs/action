@@ -32,11 +32,6 @@ jobs:
               "ignore": "images",
             }
           - {
-              "name": "hacs/ND-NotifyUpdates",
-              "category": "netdaemon",
-              "ignore": "topics",
-            }
-          - {
               "name": "ludeeus/ad-hacs",
               "category": "appdaemon",
               "ignore": "hacsjson",
