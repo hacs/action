@@ -7,7 +7,7 @@ _Repository validation action for HACS_
 | Input    | Description                                                                                        |
 | -------- | -------------------------------------------------------------------------------------------------- |
 | ignore   | A space seperated list of ignored checks                                                           |
-| category | The type of repository (integration, plugin, template, theme, netdaemon, appdaemon, python_script) |
+| category | The type of repository (integration, plugin, template, theme, appdaemon, python_script) |
 
 ## Example
 
