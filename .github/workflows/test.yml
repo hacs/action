@@ -12,35 +12,30 @@ jobs:
     strategy:
       matrix:
         repository:
-          - { "name": "hacs/integration", "category": "integration" }
-          - {
-              "name": "basnijholt/lovelace-ios-dark-mode-theme",
-              "category": "theme",
-            }
-          - {
-              "name": "home-assistant-community-themes/template",
-              "category": "theme",
-            }
-          - {
-              "name": "ofekashery/vertical-stack-in-card",
-              "category": "plugin",
-              "ignore": "images topics",
-            }
-          - {
-              "name": "custom-cards/boilerplate-card",
-              "category": "plugin",
-              "ignore": "images",
-            }
-          - {
-              "name": "ludeeus/ad-hacs",
-              "category": "appdaemon",
-              "ignore": "hacsjson",
-            }
-          - {
-              "name": "ludeeus/ps-hacs",
-              "category": "python_script",
-              "ignore": "hacsjson information",
-            }
+            - name: hacs/integration
+              category: integration
+
+            - name: basnijholt/lovelace-ios-dark-mode-theme
+              category: theme
+
+            - name: home-assistant-community-themes/template
+              category: theme
+
+            - name: ofekashery/vertical-stack-in-card
+              category: plugin
+              ignore: images topics
+
+            - name: custom-cards/boilerplate-card
+              category: plugin
+              ignore: images
+
+            - name: ludeeus/ad-hacs
+              category: appdaemon
+              ignore: hacsjson
+
+            - name: ludeeus/ps-hacs
+              category: python_script
+              ignore: hacsjson information
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.1.0
