@@ -1,0 +1,28 @@
+{
+  "name": "hacs-action",
+  "private": true,
+  "description": "Repository validation action for HACS",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "format": "prettier --write src scripts eslint.config.mjs",
+    "format:check": "prettier --check src scripts eslint.config.mjs",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@actions/core": "3.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.19.2",
+    "esbuild": "0.28.2",
+    "eslint": "10.13.0",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.2",
+    "vitest": "5.0.5"
+  }
+}
