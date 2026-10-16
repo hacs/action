@@ -25,6 +25,7 @@ jobs:
 
           - name: home-assistant-community-themes/template
             category: theme
+            ignore: license
 
           - name: ofekashery/vertical-stack-in-card
             category: plugin
