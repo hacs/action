@@ -2,3 +2,5 @@ result
 error
 data
 dummy
+node_modules/
+dist/
