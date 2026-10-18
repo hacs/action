@@ -4,6 +4,7 @@ import sys
 
 
 def main() -> int:
+    """Run the action and return the exit code."""
     sys.stdout.write("The Python implementation of the HACS action has no checks yet.\n")
     return 0
 
