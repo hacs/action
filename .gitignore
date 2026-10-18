@@ -2,3 +2,5 @@ result
 error
 data
 dummy
+.venv/
+__pycache__/
