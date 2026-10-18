@@ -1,0 +1,54 @@
+[project]
+name = "hacs-action"
+version = "0.0.0"
+description = "Repository validation action for HACS"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "pytest==9.1.1",
+  "ruff==0.17.1",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+
+[tool.ruff]
+fix = true
+line-length = 100
+show-fixes = true
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  # Conflicts with the ruff formatter.
+  "COM812",
+  # Files don't carry copyright headers.
+  "CPY001",
+  # Contradict D211 and D212.
+  "D203",
+  "D213",
+]
+
+fixable = ["ALL"]
+unfixable = []
+
+
+[tool.ruff.lint.per-file-ignores]
+# pytest relies on plain assert statements.
+"tests/**" = ["S101"]
+
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-sort-within-sections = true
+known-first-party = [
+  "hacs_action",
+]
